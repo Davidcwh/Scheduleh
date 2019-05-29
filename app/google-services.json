@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "639768018676",
+    "firebase_url": "https://scheduleh-bf8f4.firebaseio.com",
+    "project_id": "scheduleh-bf8f4",
+    "storage_bucket": "scheduleh-bf8f4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:639768018676:android:a8aed8ae4637f9f5",
+        "android_client_info": {
+          "package_name": "com.example.scheduleh"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "639768018676-qs3escf60sormh23gj7oh5k4adlhjd8f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.scheduleh",
+            "certificate_hash": "b415401f7c18e7a61e042b2adfee0528c5394731"
+          }
+        },
+        {
+          "client_id": "639768018676-o15rr623ioq7pm7eed4icogr2thom1b0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCmDj37T7_QFQl5YW1U6Og2Lx5x7C3A_sw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "639768018676-o15rr623ioq7pm7eed4icogr2thom1b0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
