@@ -5,14 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.applikeysolutions.cosmocalendar.view.CalendarView
-        android:id="@+id/calendar_view"
+    <com.shrikanthravi.collapsiblecalendarview.widget.CollapsibleCalendar
+        android:id="@+id/collapsibleCalendarView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:calendarBackgroundColor="@color/cardview_shadow_end_color"
-        app:dayTextColor="@color/colorWhite"
-        app:monthTextColor="@color/colorWhite"
-        app:otherDayTextColor="@color/cardview_shadow_end_color"
-        ></com.applikeysolutions.cosmocalendar.view.CalendarView>
+        android:layout_height="wrap_content"
+        app:primaryColor="@color/cardview_shadow_end_color"
+        app:textColor="@android:color/white"
+        app:selectedItem_textColor="@android:color/white"
+        app:todayItem_textColor="@android:color/white"
+        app:todayItem_background="@drawable/circle_green_stroke_background"
+        app:selectedItem_background="@drawable/circle_green_solid_background"
+        app:buttonLeft_drawableTintColor="@color/lightgreen"
+        app:buttonRight_drawableTintColor="@color/lightgreen"
+        app:expandIconColor="@color/lightgreen">
+    </com.shrikanthravi.collapsiblecalendarview.widget.CollapsibleCalendar>
 
 </LinearLayout>
