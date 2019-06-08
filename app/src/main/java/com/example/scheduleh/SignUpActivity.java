@@ -17,12 +17,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
 
     EditText SignUpName, SignUpEmail, SignUpPassword;
     ProgressBar progressBar;
     private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +37,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         progressBar = findViewById(R.id.SignUpProgressBar);
 
         mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
 
         findViewById(R.id.SignUpCreateAccountButton).setOnClickListener(this);
         findViewById(R.id.SignUpLinkToLogIn).setOnClickListener(this);
@@ -86,6 +89,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                     FirebaseUser user = mAuth.getCurrentUser();
                     UserProfileChangeRequest updateProfile = new UserProfileChangeRequest.Builder().setDisplayName(displayName).build();
                     user.updateProfile(updateProfile);
+
+                    db.collection("users").document(user.getUid()).set(user);
 
                     finish();
                     Intent intent = new Intent(SignUpActivity.this, MainActivity.class);

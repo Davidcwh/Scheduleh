@@ -24,10 +24,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, null);
 
-        mAuth = FirebaseAuth.getInstance();
-        userDisplayName = view.findViewById(R.id.homeUserDisplayName);
-        userDisplayName.setText(mAuth.getCurrentUser().getDisplayName());
-
         view.findViewById(R.id.homeSettings).setOnClickListener(this);
         view.findViewById(R.id.homeFriends).setOnClickListener(this);
 
@@ -44,5 +40,15 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             case R.id.homeFriends:
                 break;
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        mAuth = FirebaseAuth.getInstance();
+        userDisplayName = getView().findViewById(R.id.homeUserDisplayName);
+        userDisplayName.setText(mAuth.getCurrentUser().getDisplayName());
+
     }
 }
