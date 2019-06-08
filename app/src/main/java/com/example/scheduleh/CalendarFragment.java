@@ -47,6 +47,14 @@ public class CalendarFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        Calendar calendar = Calendar.getInstance();
+        selectedYear = calendar.get(Calendar.YEAR);
+        selectedMonth = calendar.get(Calendar.MONTH) + 1;
+        selectedDay = calendar.get(Calendar.DAY_OF_MONTH);
+//        Log.i(getClass().getName(), "Current Day: "
+//                + selectedYear + "/" + selectedMonth + "/" + selectedDay);
+        setUpRecyclerView(selectedYear, selectedMonth, selectedDay);
+
         collapsibleCalendar = getView().findViewById(R.id.collapsibleCalendarView);
         collapsibleCalendar.setCalendarListener(new CollapsibleCalendar.CalendarListener() {
             @Override
@@ -55,21 +63,12 @@ public class CalendarFragment extends Fragment {
                 selectedYear = day.getYear();
                 selectedMonth = day.getMonth() + 1;
                 selectedDay = day.getDay();
+                adapter.stopListening();
                 setUpRecyclerView(selectedYear, selectedMonth, selectedDay);
+                adapter.startListening();
 
-                addEventButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(getActivity(), NewEventActivity.class);
-                        intent.putExtra("year", selectedYear);
-                        intent.putExtra("month", selectedMonth);
-                        intent.putExtra("day", selectedDay);
-                        startActivity(intent);
-                    }
-                });
-
-                Log.i(getClass().getName(), "Selected Day: "
-                        + day.getYear() + "/" + (day.getMonth() + 1) + "/" + day.getDay());
+//                Log.i(getClass().getName(), "Selected Day: "
+//                        + day.getYear() + "/" + (day.getMonth() + 1) + "/" + day.getDay());
             }
 
             @Override
@@ -95,15 +94,15 @@ public class CalendarFragment extends Fragment {
 
     }
 
-    private void setUpRecyclerView(int year, int month, int day) {
+    private void setUpRecyclerView(final int year, final int month, final int day) {
+
+        Log.i(getClass().getName(), "Setting up recyclerView");
 
         dayEventsRef = db.collection("users").document(mAuth.getCurrentUser().getUid())
                 .collection("years").document(String.valueOf(year))
                 .collection("months").document(String.valueOf(month))
                 .collection("days").document(String.valueOf(day))
                 .collection("events");
-
-        //dayEventsRef = db.collection("test_events");
 
         Query query = dayEventsRef.orderBy("startTime", Query.Direction.ASCENDING);
 
@@ -117,24 +116,23 @@ public class CalendarFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
+
+        addEventButton = getView().findViewById(R.id.add_event_button);
+        addEventButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), NewEventActivity.class);
+                intent.putExtra("year", year);
+                intent.putExtra("month", month);
+                intent.putExtra("day", day);
+                startActivity(intent);
+            }
+        });
     }
-
-
 
     @Override
     public void onStart() {
         super.onStart();
-
-        Calendar calendar = Calendar.getInstance();
-        selectedYear = calendar.get(Calendar.YEAR);
-        selectedMonth = calendar.get(Calendar.MONTH) + 1;
-        selectedDay = calendar.get(Calendar.DAY_OF_MONTH);
-        Log.i(getClass().getName(), "Current Day: "
-                + selectedYear + "/" + selectedMonth + "/" + selectedDay);
-        setUpRecyclerView(selectedYear, selectedMonth, selectedDay);
-
-        addEventButton = getView().findViewById(R.id.add_event_button);
-
         adapter.startListening();
     }
 

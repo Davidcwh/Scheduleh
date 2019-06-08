@@ -1,5 +1,6 @@
 package com.example.scheduleh;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,7 +23,6 @@ public class NewEventActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_event);
-
         new_event_eventName = findViewById(R.id.new_event_eventName_editText);
         new_event_startTime = findViewById(R.id.new_event_startTime_editText);
         new_event_endTime = findViewById(R.id.new_event_endTime_editText);

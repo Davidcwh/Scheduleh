@@ -2,6 +2,7 @@
     <string name="app_name">Scheduleh</string>
     <string name="available_jio">Available Jio</string>
     <string name="login">Login</string>
+    <string name="new_event">New Event</string>
 
     <string name="current_date">June, 2016</string>
     <string name="add_event">ADD CALENDAR EVENT</string>
