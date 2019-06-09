@@ -39,18 +39,20 @@ public class NewEventActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.save_event:
+            case R.id.save_event: // When save icon is clicked
                 saveEvent();
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    // Saves the new event into the database
     private void saveEvent() {
         String eventName = new_event_eventName.getText().toString();
         String startTime = new_event_startTime.getText().toString();
         String endTime = new_event_endTime.getText().toString();
 
+        // Ensures event fields are non-empty
         if (eventName.trim().isEmpty()) {
             new_event_eventName.setError("Event name required");
             new_event_eventName.requestFocus();
@@ -67,11 +69,13 @@ public class NewEventActivity extends AppCompatActivity {
             return;
         }
 
+        // Retrieving the date selected on the calendar from an intent
         Intent intent = getIntent();
         int eventYear = intent.getIntExtra("year", 0);
         int eventMonth = intent.getIntExtra("month", 0);
         int eventDay = intent.getIntExtra("day", 0);
 
+        // Reference to collection of events for the selected date
         CollectionReference eventsRef = FirebaseFirestore.getInstance()
                 .collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getUid())
                 .collection("years").document(String.valueOf(eventYear))
@@ -79,6 +83,7 @@ public class NewEventActivity extends AppCompatActivity {
                 .collection("days").document(String.valueOf(eventDay))
                 .collection("events");
 
+        // Adding the new event into the database
         eventsRef.add(new Event(eventName, Double.parseDouble(startTime), Double.parseDouble(endTime)));
         Toast.makeText(this, "Event added", Toast.LENGTH_SHORT).show();
         finish();

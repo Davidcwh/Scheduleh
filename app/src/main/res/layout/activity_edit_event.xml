@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".EditEventActivity">
+
+
+    <EditText
+        android:id="@+id/edit_event_eventName_editText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Event Name"
+        android:inputType="textMultiLine"/>
+
+    <EditText
+        android:id="@+id/edit_event_startTime_editText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Start time"
+        android:inputType="number"/>
+
+    <EditText
+        android:id="@+id/edit_event_endTime_editText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="End time"
+        android:inputType="number"/>
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/edit_event_deleteEvent_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/delete_event"
+        android:padding="8dp"
+        android:layout_marginTop="16dp"
+        android:background="@color/redDelete"/>
+</LinearLayout>

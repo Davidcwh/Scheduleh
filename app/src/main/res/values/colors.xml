@@ -8,4 +8,5 @@
 
     <color name="colorWhite">#ffffff</color>
     <color name="colorBlack">#000000</color>
+    <color name="redDelete" >#d11a2a</color>
 </resources>

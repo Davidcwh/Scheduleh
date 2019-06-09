@@ -20,6 +20,16 @@
         app:expandIconColor="@color/lightgreen">
     </com.shrikanthravi.collapsiblecalendarview.widget.CollapsibleCalendar>
 
+    <TextView
+        android:id="@+id/display_selectedDate_textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="date"
+        android:padding="8dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textAlignment="center"
+        android:background="@color/colorPrimaryDark"/>
+
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">

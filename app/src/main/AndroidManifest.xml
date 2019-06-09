@@ -9,9 +9,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".NewEventActivity"
-            android:theme="@style/Theme.AppCompat"
-            android:label="@string/new_event"></activity>
+        <activity android:name=".EditEventActivity"
+            android:label="@string/edit_event"
+            android:theme="@style/Theme.AppCompat"></activity>
+        <activity
+            android:name=".NewEventActivity"
+            android:label="@string/new_event"
+            android:theme="@style/Theme.AppCompat" />
         <activity android:name=".SettingsActivity" />
         <activity android:name=".SignUpActivity" />
         <activity android:name=".MainActivity" />
