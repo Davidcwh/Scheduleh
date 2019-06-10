@@ -60,17 +60,17 @@ public class CalendarFragment extends Fragment {
 
         displaySelectedDate = getView().findViewById(R.id.display_selectedDate_textView);
         displaySelectedDate.setText(R.string.today);
-        setUpRecyclerView(selectedYear, selectedMonth, selectedDay); // Set up the recycler view to display today's events by default
 
+        setUpRecyclerView(selectedYear, selectedMonth, selectedDay); // Set up the recycler view to display today's events by default
 
         // Initialising the collapsible calendar view
         collapsibleCalendar = getView().findViewById(R.id.collapsibleCalendarView);
         collapsibleCalendar.setCalendarListener(new CollapsibleCalendar.CalendarListener() {
             @Override
-            public void onDaySelect() { // When a date is selected, recycler view must change to display that date's events
+            public void onDaySelect() { // When a date is selected, the recycler view must change to display the selected date's events
                 Day day = collapsibleCalendar.getSelectedDay();
                 selectedYear = day.getYear();
-                selectedMonth = day.getMonth() + 1;
+                selectedMonth = day.getMonth() + 1; // + 1 cos month indexes start with 0
                 selectedDay = day.getDay();
 
                 //If selected day is not today, then change the displayed date in the textView
@@ -80,7 +80,7 @@ public class CalendarFragment extends Fragment {
                         selectedDay == calendar.get(Calendar.DAY_OF_MONTH))) {
                     displaySelectedDate.setText(selectedDay + " " + convertIntToMonth(selectedMonth) + ", " + selectedYear);
                 } else {
-                    // else, means today's date was selected again, so just display "today"
+                    // else, means today's date was selected again, so just display "Today"
                     displaySelectedDate.setText(R.string.today);
                 }
 

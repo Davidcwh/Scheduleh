@@ -9,9 +9,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".EditEventActivity"
+        <activity android:name=".FriendsActivity"></activity>
+        <activity
+            android:name=".EditEventActivity"
             android:label="@string/edit_event"
-            android:theme="@style/Theme.AppCompat"></activity>
+            android:theme="@style/Theme.AppCompat" />
         <activity
             android:name=".NewEventActivity"
             android:label="@string/new_event"

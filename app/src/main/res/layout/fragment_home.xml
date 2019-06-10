@@ -1,108 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <RelativeLayout
+        android:id="@+id/profile_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <ImageView
-            android:id="@+id/homeHeaderCoverImageView"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_triangle_green" />
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryDark"
+        android:elevation="4dp"
+        android:paddingBottom="12dp">
 
         <ImageButton
             android:id="@+id/homeUserProfilePhoto"
             android:layout_width="120dp"
             android:layout_height="120dp"
-            android:layout_below="@+id/homeHeaderCoverImageView"
+            android:layout_marginTop="50dp"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="-60dp"
             android:background="@drawable/profile_circular_border"
             android:elevation="5dp"
             android:padding="20dp"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_home_default_profile_pic" />
 
-        <RelativeLayout
-            android:id="@+id/profile_layout"
-            android:layout_width="match_parent"
+
+        <ImageView
+            android:id="@+id/homeFriends"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_toLeftOf="@+id/homeSettings"
+            android:contentDescription="TODO"
+            android:src="@drawable/ic_home_friends" />
+
+        <ImageView
+            android:id="@+id/homeSettings"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/ic_home_settings" />
+
+        <TextView
+            android:id="@+id/homeUserDisplayName"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/homeHeaderCoverImageView"
-            android:background="@color/colorPrimaryDark"
-            android:elevation="4dp"
-            android:paddingBottom="24dp">
+            android:layout_below="@+id/homeUserProfilePhoto"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:text="Display Name"
+            android:textColor="#fff"
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
-
-            <ImageView
-                android:id="@+id/homeFriends"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_toLeftOf="@+id/homeSettings"
-                android:src="@drawable/ic_home_friends"
-                android:contentDescription="TODO" />
-
-            <ImageView
-                android:id="@+id/homeSettings"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="16dp"
-                android:src="@drawable/ic_home_settings" />
-
-            <TextView
-                android:id="@+id/homeUserDisplayName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="76dp"
-                android:text="Display Name"
-                android:textColor="#fff"
-                android:textSize="24sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/homeUserProfileShortBio"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/homeUserDisplayName"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="12dp"
-                android:text="some text here idk"
-                android:textColor="#fff"
-                android:textSize="14sp" />
-        </RelativeLayout>
-
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/profile_layout"
-            android:layout_marginTop="5dp"
-            android:orientation="vertical">
-
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/homeCurrentDateTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="Today's Date"
-                android:textSize="@dimen/text_large"
-                tools:text="@tools:sample/date/ddmmyy" />
-
-            <ListView
-                android:id="@+id/homeCurrentDateEvents"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"></ListView>
-
-        </LinearLayout>
     </RelativeLayout>
-</ScrollView>
+
+    <TextView
+        android:id="@+id/display_currentDate_textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="date"
+        android:padding="8dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textAlignment="center"
+        android:background="@color/cardview_shadow_end_color"/>
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/currentDay_events_recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </android.support.design.widget.CoordinatorLayout>
+
+</LinearLayout>
