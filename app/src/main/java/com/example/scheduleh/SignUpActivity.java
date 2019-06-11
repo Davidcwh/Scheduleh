@@ -91,6 +91,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                     user.updateProfile(updateProfile);
 
                     db.collection("users").document(user.getUid()).set(user);
+                    db.collection("users").document(user.getUid()).update("displayName", displayName);
 
                     finish();
                     Intent intent = new Intent(SignUpActivity.this, MainActivity.class);

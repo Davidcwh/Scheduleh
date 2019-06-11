@@ -9,7 +9,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".FriendsActivity"></activity>
+        <activity
+            android:name=".FriendRequestsActivity"
+            android:label="@string/pending_friend_requests"
+            android:theme="@style/Theme.AppCompat"/>
+        <activity android:name=".FriendsActivity" />
         <activity
             android:name=".EditEventActivity"
             android:label="@string/edit_event"

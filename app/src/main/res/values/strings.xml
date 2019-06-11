@@ -6,6 +6,9 @@
     <string name="delete_event">Delete Event</string>
     <string name="edit_event">Edit Event</string>
     <string name="today">Today</string>
+    <string name="confirm">confirm</string>
+    <string name="delete">delete</string>
+    <string name="pending_friend_requests">Pending Friend Requests</string>
 
     <string name="current_date">June, 2016</string>
     <string name="add_event">ADD CALENDAR EVENT</string>

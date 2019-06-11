@@ -1,9 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".FriendsActivity">
 
-</android.support.constraint.ConstraintLayout>
+    <RelativeLayout
+        android:id="@+id/friends_request_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <TextView
+            android:id="@+id/friend_requests_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Friend Requests" />
+
+        <ImageView
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+
+            android:src="@drawable/ic_right_arrow" />
+
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/grey_line"
+        android:layout_width="400dp"
+        android:layout_height="1dp"
+        android:layout_below="@+id/friends_request_layout"
+        android:layout_centerHorizontal="true"
+        android:background="@android:color/darker_gray" />
+
+    <TextView
+        android:id="@+id/add_a_friend_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/grey_line"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:paddingTop="16dp"
+        android:text="Add a Friend" />
+
+    <EditText
+        android:id="@+id/add_a_friend_editText"
+        android:layout_width="380dp"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:hint="Enter friend's email"
+        android:layout_below="@id/add_a_friend_textView"
+        android:textSize="15sp"/>
+
+    <ImageView
+        android:id="@+id/add_a_friend_button"
+        android:layout_below="@id/add_a_friend_textView"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_toEndOf="@id/add_a_friend_editText"
+        android:src="@drawable/ic_home_friends" />
+
+    <TextView
+        android:id="@+id/friends_list_textView"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/add_a_friend_editText"
+        android:layout_marginTop="20dp"
+        android:text="Friends List"
+        android:textAlignment="center"
+        android:background="@color/colorPrimaryDark" />
+
+    <TextView
+        android:id="@+id/friends_number_textView"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/add_a_friend_editText"
+        android:layout_marginTop="20dp"
+        android:layout_toRightOf="@id/friends_list_textView"
+        android:textAlignment="center"
+        android:text="0 friend(s)"
+        android:background="@color/cardview_dark_background"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/friend_list_recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/friends_list_textView">
+
+    </android.support.v7.widget.RecyclerView>
+
+</RelativeLayout>
