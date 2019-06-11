@@ -64,6 +64,12 @@ public class FriendsActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     // called when add a friend button is clicked
+    // Validation checks before a friend request is send:
+    // check if entered email is non empty and if it is not the current user's own email
+    // check if the entered email user is an existing user in the database
+    // check if the entered email user is not already in the current user's friend list
+    // check if a pending friend request has not already been send before by the current user to the entered email user
+    // if all checks above are passed, then a friend request is send to the entered email user
     private void sendFriendRequest() {
         add_a_friend_editText = findViewById(R.id.add_a_friend_editText);
         String email = add_a_friend_editText.getText().toString();
@@ -85,22 +91,53 @@ public class FriendsActivity extends AppCompatActivity implements View.OnClickLi
                                 add_a_friend_editText.setError("User does not exist");
                                 add_a_friend_editText.requestFocus();
                             } else { // else, entered email belongs to an existing user
-                                for (DocumentSnapshot documentSnapshot: queryDocumentSnapshots) {
-                                    // creates id and display name key value pairing to add them to friend request document later
-                                    Map<String, Object> map = new HashMap<>();
-                                    map.put("id", mAuth.getCurrentUser().getUid());
-                                    map.put("displayName", mAuth.getCurrentUser().getDisplayName());
+                                for (final DocumentSnapshot documentSnapshot: queryDocumentSnapshots) {
+                                    // check if entered email user is an existing friend of current user
+                                    db.collection("users").document(mAuth.getCurrentUser().getUid())
+                                            .collection("friend list")
+                                            .document(documentSnapshot.getId())
+                                            .get()
+                                            .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                    if (!task.getResult().exists()) { // entered email user is not in current user's friend list
+                                                        if (!task.getResult().exists()) {
+                                                            // check if entered email user already has a pending friend request from current user
+                                                            db.collection("users").document(documentSnapshot.getId())
+                                                                    .collection("friend requests")
+                                                                    .document(mAuth.getCurrentUser().getUid())
+                                                                    .get()
+                                                                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                                        @Override
+                                                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                                            if (!task.getResult().exists()) { // No pending friend request
+                                                                                // creates id and display name key value pairing to add them to friend request document later
+                                                                                Map<String, Object> map = new HashMap<>();
+                                                                                map.put("id", mAuth.getCurrentUser().getUid());
+                                                                                map.put("displayName", mAuth.getCurrentUser().getDisplayName());
 
-                                    // creates a document with id of the current user in the entered email user's friend requests collection
-                                    db.collection("users").document(documentSnapshot.getId())
-                                            .collection("friend requests")
-                                            .document(mAuth.getCurrentUser().getUid())
-                                            .set(map);
-                                    Toast.makeText(FriendsActivity.this, "Friend Request sent", Toast.LENGTH_SHORT).show();
+                                                                                // creates a document with id of the current user in the entered email user's friend requests collection
+                                                                                db.collection("users").document(documentSnapshot.getId())
+                                                                                        .collection("friend requests")
+                                                                                        .document(mAuth.getCurrentUser().getUid())
+                                                                                        .set(map);
+                                                                                Toast.makeText(FriendsActivity.this, "Friend Request sent", Toast.LENGTH_SHORT).show();
+                                                                            } else { // else, there is already a pending friend request, so a duplicate is not send
+                                                                                Toast.makeText(FriendsActivity.this, "Friend request still pending", Toast.LENGTH_SHORT).show();
+                                                                            }
+                                                                        }
+                                                                    });
+                                                        }
+                                                    } else { // else, entered email user is in current user's friend list
+                                                        Toast.makeText(FriendsActivity.this, "User is already a friend", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                }
+                                            });
                                 }
                             }
                         }
                     });
+
             add_a_friend_editText.getText().clear(); // clear edit text to prevent multiple friend requests send due to multiple clicks
         }
 
