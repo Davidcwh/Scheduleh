@@ -23,6 +23,9 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.annotation.Nullable;
 
 public class FriendsActivity extends AppCompatActivity implements View.OnClickListener{
@@ -83,10 +86,16 @@ public class FriendsActivity extends AppCompatActivity implements View.OnClickLi
                                 add_a_friend_editText.requestFocus();
                             } else { // else, entered email belongs to an existing user
                                 for (DocumentSnapshot documentSnapshot: queryDocumentSnapshots) {
-                                    // creates a user object and adds it to the entered email user's friend requests collection
+                                    // creates id and display name key value pairing to add them to friend request document later
+                                    Map<String, Object> map = new HashMap<>();
+                                    map.put("id", mAuth.getCurrentUser().getUid());
+                                    map.put("displayName", mAuth.getCurrentUser().getDisplayName());
+
+                                    // creates a document with id of the current user in the entered email user's friend requests collection
                                     db.collection("users").document(documentSnapshot.getId())
                                             .collection("friend requests")
-                                            .add(new User(mAuth.getCurrentUser().getUid(), mAuth.getCurrentUser().getDisplayName()));
+                                            .document(mAuth.getCurrentUser().getUid())
+                                            .set(map);
                                     Toast.makeText(FriendsActivity.this, "Friend Request sent", Toast.LENGTH_SHORT).show();
                                 }
                             }

@@ -18,6 +18,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class FriendRequestAdapter extends FirestoreRecyclerAdapter<User, FriendRequestAdapter.FriendRequestHolder> {
 
     public FriendRequestAdapter(@NonNull FirestoreRecyclerOptions<User> options) {
@@ -73,13 +76,22 @@ public class FriendRequestAdapter extends FirestoreRecyclerAdapter<User, FriendR
             FirebaseUser currentUser = mAuth.getCurrentUser();
 
             //Adding the given document snapshot user to the current user's friend list
+            Map<String, Object> addFriendToUser = new HashMap<>();
+            addFriendToUser.put("id", documentSnapshot.getId());
+            addFriendToUser.put("displayName", documentSnapshot.get("displayName").toString());
             db.collection("users").document(currentUser.getUid())
                             .collection("friend list")
-                            .add(new User(documentSnapshot.get("id").toString(), documentSnapshot.get("displayName").toString()));
+                            .document(documentSnapshot.getId())
+                            .set(addFriendToUser);
 
             // Adding the current user to the document snapshot user's friend list
-            db.collection("users").document(documentSnapshot.get("id").toString())
-                    .collection("friend list").add(new User(currentUser.getUid(), currentUser.getDisplayName()));
+            Map<String, Object> addUserToFriend = new HashMap<>();
+            addUserToFriend.put("id", currentUser.getUid());
+            addUserToFriend.put("displayName", currentUser.getDisplayName());
+            db.collection("users").document(documentSnapshot.getId())
+                    .collection("friend list")
+                    .document(currentUser.getUid())
+                    .set(addUserToFriend);
 
             Log.i(getClass().getName(), documentSnapshot.get("displayName") + " added to friends list");
         }
