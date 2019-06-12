@@ -15,17 +15,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.shrikanthravi.collapsiblecalendarview.widget.CollapsibleCalendar;
 import com.shrikanthravi.collapsiblecalendarview.data.Day;
 
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class CalendarFragment extends Fragment {
@@ -186,6 +194,7 @@ public class CalendarFragment extends Fragment {
 
                             // Add selected event to user's open jio list
                             case R.id.add_myJios_popupMenu:
+                                addEventToOpenJio(year, month, day, documentSnapshot.getId());
                                 return true;
 
                             default:
@@ -195,6 +204,57 @@ public class CalendarFragment extends Fragment {
                 });
 
                 popupMenu.show();
+            }
+        });
+    }
+
+    private void addEventToOpenJio(final int year, final int month, final int day, String eventId) {
+        DocumentReference eventRef = db.collection("users").document(mAuth.getCurrentUser().getUid())
+                .collection("years").document(String.valueOf(year))
+                .collection("months").document(String.valueOf(month))
+                .collection("days").document(String.valueOf(day))
+                .collection("events").document(eventId);
+
+        eventRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    final DocumentSnapshot event = task.getResult();
+
+                    final Map<String, Object> jioInfo = new HashMap<>();
+                    jioInfo.put("eventName", event.get("eventName"));
+                    jioInfo.put("startTime", event.get("startTime"));
+                    jioInfo.put("endTime", event.get("endTime"));
+                    jioInfo.put("year", year);
+                    jioInfo.put("month", month);
+                    jioInfo.put("day", day);
+                    db.collection("users").document(mAuth.getCurrentUser().getUid())
+                            .collection("user jios")
+                            .document(event.getId())
+                            .set(jioInfo);
+
+                    jioInfo.put("userId", mAuth.getCurrentUser().getUid());
+                    jioInfo.put("displayName", mAuth.getCurrentUser().getDisplayName());
+                    CollectionReference allFriends = db.collection("users").document(mAuth.getCurrentUser().getUid())
+                            .collection("friend list");
+                    allFriends.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot friend: task.getResult()) {
+                                    db.collection("users").document(friend.getId())
+                                            .collection("friend jios")
+                                            .document(event.getId())
+                                            .set(jioInfo);
+                                }
+                            }
+                        }
+                    });
+
+
+                } else {
+                    Toast.makeText(getContext(), "Event not found", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
