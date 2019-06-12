@@ -9,6 +9,7 @@
     <string name="confirm">confirm</string>
     <string name="delete">delete</string>
     <string name="pending_friend_requests">Pending Friend Requests</string>
+    <string name="add_myJios">Add to MyJios</string>
 
     <string name="current_date">June, 2016</string>
     <string name="add_event">ADD CALENDAR EVENT</string>

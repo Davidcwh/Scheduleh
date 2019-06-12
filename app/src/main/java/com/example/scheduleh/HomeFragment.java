@@ -9,8 +9,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
@@ -97,22 +99,49 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         adapter = new EventAdapter(options);
 
-        RecyclerView recyclerView = getView().findViewById(R.id.currentDay_events_recyclerView);
+        final RecyclerView recyclerView = getView().findViewById(R.id.currentDay_events_recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
 
 
-        // When an event in the recycler view is long clicked, the activity to edit or delete that event is brought up
+        // When an event in the recycler view is long clicked, a popup menu will be shown
+        // popup menu consists of options to edit event or add event to user's open jio list
         adapter.setOnLongItemClickListener(new EventAdapter.OnLongItemClickListener() {
             @Override
-            public void OnLongItemClick(DocumentSnapshot documentSnapshot, int position) {
-                Intent intent = new Intent(getActivity(), EditEventActivity.class);
-                intent.putExtra("year", year);
-                intent.putExtra("month", month);
-                intent.putExtra("day", day);
-                intent.putExtra("eventId", documentSnapshot.getId());
-                startActivity(intent);
+            public void OnLongItemClick(final DocumentSnapshot documentSnapshot, int position) {
+
+                // Initialising popup menu at the item's position of the recycler view
+                PopupMenu popupMenu = new PopupMenu(getContext(), recyclerView.getLayoutManager().findViewByPosition(position));
+                popupMenu.inflate(R.menu.event_popup_menu);
+
+                // Setting up the options in the popup menu when clicked
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            // Edit event option
+                            case R.id.edit_event_popupMenu:
+                                // Opens the edit event activity and sends over the date of the selected event and its id
+                                Intent intent = new Intent(getActivity(), EditEventActivity.class);
+                                intent.putExtra("year", year);
+                                intent.putExtra("month", month);
+                                intent.putExtra("day", day);
+                                intent.putExtra("eventId", documentSnapshot.getId());
+                                startActivity(intent);
+                                return true;
+
+                            // Add selected event to user's open jio list
+                            case R.id.add_myJios_popupMenu:
+                                return true;
+
+                            default:
+                                return false;
+                        }
+                    }
+                });
+
+                popupMenu.show();
             }
         });
     }
