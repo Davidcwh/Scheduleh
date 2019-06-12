@@ -75,16 +75,13 @@ public class NewEventActivity extends AppCompatActivity {
         int eventMonth = intent.getIntExtra("month", 0);
         int eventDay = intent.getIntExtra("day", 0);
 
-        // Reference to collection of events for the selected date
+        // Reference to collection of events
         CollectionReference eventsRef = FirebaseFirestore.getInstance()
                 .collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                .collection("years").document(String.valueOf(eventYear))
-                .collection("months").document( String.valueOf(eventMonth))
-                .collection("days").document(String.valueOf(eventDay))
                 .collection("events");
 
         // Adding the new event into the database
-        eventsRef.add(new Event(eventName, Double.parseDouble(startTime), Double.parseDouble(endTime)));
+        eventsRef.add(new Event(eventName, Double.parseDouble(startTime), Double.parseDouble(endTime), eventYear, eventMonth, eventDay));
         Toast.makeText(this, "Event added", Toast.LENGTH_SHORT).show();
         finish();
     }

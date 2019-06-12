@@ -132,13 +132,13 @@ public class CalendarFragment extends Fragment {
     private void setUpRecyclerView(final int year, final int month, final int day) {
         // Reference to collection of events to display in recycler view
         dayEventsRef = db.collection("users").document(mAuth.getCurrentUser().getUid())
-                .collection("years").document(String.valueOf(year))
-                .collection("months").document(String.valueOf(month))
-                .collection("days").document(String.valueOf(day))
                 .collection("events");
 
-        // Sort the events by start time in ascending order
-        Query query = dayEventsRef.orderBy("startTime", Query.Direction.ASCENDING);
+        // Get events of the particular date and sort these events by start time in ascending order
+        Query query = dayEventsRef.whereEqualTo("year", year)
+                                    .whereEqualTo("month", month)
+                                    .whereEqualTo("day", day)
+                                    .orderBy("startTime", Query.Direction.ASCENDING);
 
         FirestoreRecyclerOptions<Event> options = new FirestoreRecyclerOptions.Builder<Event>()
                 .setQuery(query, Event.class)
@@ -194,7 +194,7 @@ public class CalendarFragment extends Fragment {
 
                             // Add selected event to user's open jio list
                             case R.id.add_myJios_popupMenu:
-                                addEventToOpenJio(year, month, day, documentSnapshot.getId());
+                                addEventToOpenJio(documentSnapshot.getId());
                                 return true;
 
                             default:
@@ -208,40 +208,49 @@ public class CalendarFragment extends Fragment {
         });
     }
 
-    private void addEventToOpenJio(final int year, final int month, final int day, String eventId) {
+    // Adds the event of the input event id to the user's jio collection and to all user's friends' friends jio collection
+    private void addEventToOpenJio(String eventId) {
+
+        // reference to event document
         DocumentReference eventRef = db.collection("users").document(mAuth.getCurrentUser().getUid())
-                .collection("years").document(String.valueOf(year))
-                .collection("months").document(String.valueOf(month))
-                .collection("days").document(String.valueOf(day))
                 .collection("events").document(eventId);
 
+        // retrieving event document
         eventRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     final DocumentSnapshot event = task.getResult();
 
+                    // Storing all event info
                     final Map<String, Object> jioInfo = new HashMap<>();
                     jioInfo.put("eventName", event.get("eventName"));
                     jioInfo.put("startTime", event.get("startTime"));
                     jioInfo.put("endTime", event.get("endTime"));
-                    jioInfo.put("year", year);
-                    jioInfo.put("month", month);
-                    jioInfo.put("day", day);
+                    jioInfo.put("year", event.get("year"));
+                    jioInfo.put("month", event.get("month"));
+                    jioInfo.put("day", event.get("day"));
+                    // Adding event to user's "user jios" collection
                     db.collection("users").document(mAuth.getCurrentUser().getUid())
                             .collection("user jios")
                             .document(event.getId())
                             .set(jioInfo);
 
+                    // Now add the user's id and display name to the set of info
+                    // This is because the event will now be added to all friends' "friend jios"
                     jioInfo.put("userId", mAuth.getCurrentUser().getUid());
                     jioInfo.put("displayName", mAuth.getCurrentUser().getDisplayName());
+
+                    // reference to collection of user's friends
                     CollectionReference allFriends = db.collection("users").document(mAuth.getCurrentUser().getUid())
                             .collection("friend list");
                     allFriends.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if (task.isSuccessful()) {
+                                // for all friends
                                 for (QueryDocumentSnapshot friend: task.getResult()) {
+                                    // for each friend, add the event to their "friend jios" list
                                     db.collection("users").document(friend.getId())
                                             .collection("friend jios")
                                             .document(event.getId())

@@ -16,9 +16,12 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class EditEventActivity extends AppCompatActivity {
 
@@ -44,16 +47,14 @@ public class EditEventActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
 
 
-        // Retrieving information about event to be edited from the intent passed from the calendar fragement
+        // Retrieving information about event to be edited from the intent passed from the calendar fragment
         Intent intent = getIntent();
         eventYear = intent.getIntExtra("year", 0);
         eventMonth = intent.getIntExtra("month", 0);
         eventDay = intent.getIntExtra("day", 0);
         eventId = intent.getStringExtra("eventId");
+
         documentReference = db.collection("users").document(mAuth.getCurrentUser().getUid())
-                .collection("years").document(String.valueOf(eventYear))
-                .collection("months").document(String.valueOf(eventMonth))
-                .collection("days").document(String.valueOf(eventDay))
                 .collection("events").document(eventId);
 
         // Initializing edit texts and button
@@ -86,9 +87,7 @@ public class EditEventActivity extends AppCompatActivity {
         edit_event_deleteEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                documentReference.delete(); // deletes the event document saved in the database
-                Toast.makeText(EditEventActivity.this, "Event deleted", Toast.LENGTH_SHORT).show();
-                finish();
+                deleteEvent();
             }
         });
 
@@ -111,11 +110,60 @@ public class EditEventActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    // Updates the event to be edited with the information in the edit texts
+    // Deletes the event EVERYWHERE in the database
+    private void deleteEvent() {
+
+        // #1: deletes the event document saved in the user's events collection
+        documentReference.delete();
+
+        // #2: deletes the event document in all friends' "friend jio" collection, if it is there.
+        CollectionReference allFriends = db.collection("users").document(mAuth.getCurrentUser().getUid())
+                .collection("friend list");
+        allFriends.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot friend: task.getResult()) {
+                        // for each friend, search their "friend jios" list for the event
+                        db.collection("users").document(friend.getId())
+                                .collection("friend jios")
+                                .document(documentReference.getId())
+                                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.getResult().exists()) { // if the event is in the collection, delete it
+                                    task.getResult().getReference().delete();
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+        });
+
+
+        // #3: deletes the event document from the user's own "user jios" collection
+        db.collection("users").document(mAuth.getCurrentUser().getUid())
+                .collection("user jios")
+                .document(documentReference.getId())
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.getResult().exists()) {
+                    task.getResult().getReference().delete();
+                }
+            }
+        });
+
+        Toast.makeText(EditEventActivity.this, "Event deleted", Toast.LENGTH_SHORT).show();
+        finish();
+    }
+
+    // Updates the event with the information in the edit texts, wherever the event is in the database
     private void updateEvent() {
-        String eventName = edit_event_eventName.getText().toString();
-        String startTime = edit_event_startTime.getText().toString();
-        String endTime = edit_event_endTime.getText().toString();
+        final String eventName = edit_event_eventName.getText().toString();
+        final String startTime = edit_event_startTime.getText().toString();
+        final String endTime = edit_event_endTime.getText().toString();
 
         // Checks if edit texts are empty
         if (eventName.trim().isEmpty()) {
@@ -134,9 +182,55 @@ public class EditEventActivity extends AppCompatActivity {
             return;
         }
 
+        // Updating the event in the user's events collection
         documentReference.update("eventName", eventName);
         documentReference.update("startTime", Double.parseDouble(startTime));
         documentReference.update("endTime", Double.parseDouble(endTime));
+
+        // Updating the event in all of the user's friends' "friend jios" collection, if it is there.
+        CollectionReference allFriends = db.collection("users").document(mAuth.getCurrentUser().getUid())
+                .collection("friend list");
+        allFriends.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot friend: task.getResult()) {
+                        // for each friend, search their "friend jios" list for the event
+                        db.collection("users").document(friend.getId())
+                                .collection("friend jios")
+                                .document(documentReference.getId())
+                                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.getResult().exists()) { // if the event is in the collection, delete it
+                                    DocumentReference ref = task.getResult().getReference();
+                                    ref.update("eventName", eventName);
+                                    ref.update("startTime", Double.parseDouble(startTime));
+                                    ref.update("endTime", Double.parseDouble(endTime));
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+        });
+
+        // Updating the event in the the user's "user jios" collection, if it is there
+        db.collection("users").document(mAuth.getCurrentUser().getUid())
+                .collection("user jios")
+                .document(documentReference.getId())
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.getResult().exists()) {
+                    DocumentReference ref = task.getResult().getReference();
+                    ref.update("eventName", eventName);
+                    ref.update("startTime", Double.parseDouble(startTime));
+                    ref.update("endTime", Double.parseDouble(endTime));
+                }
+            }
+        });
+
         Toast.makeText(this, "Event Updated", Toast.LENGTH_SHORT).show();
         finish();
     }
