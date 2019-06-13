@@ -183,6 +183,12 @@ public class CalendarFragment extends Fragment {
                         switch (item.getItemId()) {
                             // Edit event option
                             case R.id.edit_event_popupMenu:
+
+                                if (!documentSnapshot.get("userId").equals(mAuth.getCurrentUser().getUid())) {
+                                    Toast.makeText(getContext(), "Cannot edit your friend's events", Toast.LENGTH_SHORT).show();
+                                    return false;
+                                }
+
                                 // Opens the edit event activity and sends over the date of the selected event and its id
                                 Intent intent = new Intent(getActivity(), EditEventActivity.class);
                                 intent.putExtra("year", year);
@@ -194,6 +200,10 @@ public class CalendarFragment extends Fragment {
 
                             // Add selected event to user's open jio list
                             case R.id.add_myJios_popupMenu:
+                                if (!documentSnapshot.get("userId").equals(mAuth.getCurrentUser().getUid())) {
+                                    Toast.makeText(getContext(), "Cannot add your friend's events to your jios", Toast.LENGTH_SHORT).show();
+                                    return false;
+                                }
                                 addEventToOpenJio(documentSnapshot.getId());
                                 return true;
 
@@ -230,16 +240,15 @@ public class CalendarFragment extends Fragment {
                     jioInfo.put("year", event.get("year"));
                     jioInfo.put("month", event.get("month"));
                     jioInfo.put("day", event.get("day"));
+                    jioInfo.put("userId", event.get("userId"));
+                    jioInfo.put("displayName", event.get("displayName"));
+                    jioInfo.put("priority", event.get("priority"));
+
                     // Adding event to user's "user jios" collection
                     db.collection("users").document(mAuth.getCurrentUser().getUid())
                             .collection("user jios")
                             .document(event.getId())
                             .set(jioInfo);
-
-                    // Now add the user's id and display name to the set of info
-                    // This is because the event will now be added to all friends' "friend jios"
-                    jioInfo.put("userId", mAuth.getCurrentUser().getUid());
-                    jioInfo.put("displayName", mAuth.getCurrentUser().getDisplayName());
 
                     // reference to collection of user's friends
                     CollectionReference allFriends = db.collection("users").document(mAuth.getCurrentUser().getUid())

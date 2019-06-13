@@ -130,6 +130,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                         switch (item.getItemId()) {
                             // Edit event option
                             case R.id.edit_event_popupMenu:
+
+                                if (!documentSnapshot.get("userId").equals(mAuth.getCurrentUser().getUid())) {
+                                    Toast.makeText(getContext(), "Cannot edit your friend's events", Toast.LENGTH_SHORT).show();
+                                    return false;
+                                }
+
                                 // Opens the edit event activity and sends over the date of the selected event and its id
                                 Intent intent = new Intent(getActivity(), EditEventActivity.class);
                                 intent.putExtra("year", year);
@@ -141,6 +147,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
                             // Add selected event for openJio
                             case R.id.add_myJios_popupMenu:
+
+                                if (!documentSnapshot.get("userId").equals(mAuth.getCurrentUser().getUid())) {
+                                    Toast.makeText(getContext(), "Cannot add your friend's events to your jios", Toast.LENGTH_SHORT).show();
+                                    return false;
+                                }
+
                                 addEventToOpenJio(documentSnapshot.getId());
                                 return true;
 
@@ -177,6 +189,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                     jioInfo.put("year", event.get("year"));
                     jioInfo.put("month", event.get("month"));
                     jioInfo.put("day", event.get("day"));
+                    jioInfo.put("priority", event.get("priority"));
+
                     // Adding event to user's "user jios" collection
                     db.collection("users").document(mAuth.getCurrentUser().getUid())
                             .collection("user jios")

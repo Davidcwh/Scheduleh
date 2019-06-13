@@ -5,6 +5,7 @@
     <color name="selected_day_green">#33d993</color>
     <color name="lightgreen">#00cf78</color>
     <color name="colorAccent">#D81B60</color>
+    <color name="mti_default_primary">#01b37c</color>
 
     <color name="colorWhite">#ffffff</color>
     <color name="colorBlack">#000000</color>

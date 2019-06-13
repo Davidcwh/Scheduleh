@@ -1,5 +1,6 @@
 package com.example.scheduleh;
 
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 public class EventAdapter extends FirestoreRecyclerAdapter<Event, EventAdapter.EventHolder> {
@@ -33,6 +35,21 @@ public class EventAdapter extends FirestoreRecyclerAdapter<Event, EventAdapter.E
         holder.textViewEndTime.setText(model.getEndTime() + " " + AMPM);
 
         holder.textViewEventName.setText(model.getEventName());
+
+        if (model.getPriority() == 1) {
+            holder.textViewPriority.setText("Low Priority");
+            holder.textViewPriority.setTextColor(Color.parseColor("#00cf78"));
+        } else if (model.getPriority() == 2) {
+            holder.textViewPriority.setText("Medium Priority");
+            holder.textViewPriority.setTextColor(Color.parseColor("#FFFF00"));
+        } else if (model.getPriority() == 3) {
+            holder.textViewPriority.setText("High Priority");
+            holder.textViewPriority.setTextColor(Color.parseColor("#d11a2a"));
+        }
+
+        if (!FirebaseAuth.getInstance().getCurrentUser().getUid().equals(model.getUserId())) {
+            holder.textViewOpenJioStatus.setText("OpenJio from " + model.getDisplayName());
+        }
     }
 
     @NonNull
@@ -47,7 +64,8 @@ public class EventAdapter extends FirestoreRecyclerAdapter<Event, EventAdapter.E
         TextView textViewEndTime;
         TextView textViewEventName;
         TextView textViewEventColor;
-
+        TextView textViewPriority;
+        TextView textViewOpenJioStatus;
 
         public EventHolder(@NonNull View itemView) {
             super(itemView);
@@ -55,6 +73,8 @@ public class EventAdapter extends FirestoreRecyclerAdapter<Event, EventAdapter.E
             textViewEndTime = itemView.findViewById(R.id.event_end_time);
             textViewEventName = itemView.findViewById(R.id.event_name);
             textViewEventColor = itemView.findViewById(R.id.event_color);
+            textViewPriority = itemView.findViewById(R.id.event_priority);
+            textViewOpenJioStatus = itemView.findViewById(R.id.event_openJio_status);
 
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override

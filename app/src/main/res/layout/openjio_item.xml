@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="180dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginTop="8dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
+    app:cardBackgroundColor="#696969">
+
+    <android.support.v7.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="#696969">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="8dp">
+
+            <TextView
+                android:id="@+id/openJio_start_time"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:padding="8dp"
+                android:text="09:00 am"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"/>
+
+            <TextView
+                android:id="@+id/openJio_end_time"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:padding="8dp"
+                android:text="10:00 am"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/openJio_start_time"/>
+
+            <TextView
+                android:id="@+id/openJio_color"
+                android:layout_width="8dp"
+                android:layout_height="80dp"
+                android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@+id/openJio_start_time" />
+
+            <TextView
+                android:id="@+id/openJio_name"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:layout_toRightOf="@+id/openJio_start_time"
+                android:text="event title"
+                android:maxLines="2"
+                android:ellipsize="end"/>
+
+            <TextView
+                android:id="@+id/openJio_priority"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/openJio_name"
+                android:layout_marginTop="8dp" />
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="8dp"
+        android:layout_marginTop="100dp"
+        android:background="#696969">
+
+        <ImageButton
+            android:id="@+id/openJioItem_profilePhoto_imageButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/profile_circular_border"
+            android:elevation="5dp"
+            android:padding="12dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_home_default_profile_pic"
+            android:layout_centerVertical="true"
+            android:contentDescription="user's profile pic here"/>
+
+        <TextView
+            android:id="@+id/openJioItem_displayName_textView"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/openJioItem_profilePhoto_imageButton"
+            android:layout_marginStart="12dp"
+            android:layout_centerVertical="true"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+
+        <Button
+            android:id="@+id/openJio_joinJio_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Join!"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"/>
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>

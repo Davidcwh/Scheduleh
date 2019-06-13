@@ -39,6 +39,7 @@ dependencies {
     implementation 'com.github.tlaabs:TimetableView:1.0.0'
     implementation 'com.github.shrikanth7698:Collapsible-Calendar-View-Android:v1.0.0'
     implementation 'com.firebaseui:firebase-ui-firestore:5.0.0'
+    implementation 'com.github.badoualy:datepicker-timeline:c6dcd05737'
 }
 
 apply plugin: 'com.google.gms.google-services'

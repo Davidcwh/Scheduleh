@@ -1,16 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/openjioTitle"
-        android:text="@string/available_jio"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textStyle="bold"
-        android:textAlignment="center"
-        android:backgroundTint="@color/colorPrimaryDark"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:background="@color/mti_default_primary">
+
+        <TextView
+            android:id="@+id/openJio_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Open Jio"
+            android:padding="8dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:background="@color/mti_default_primary"/>
+
+        <RelativeLayout
+            android:id="@+id/myJio_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="230dp"
+            android:layout_toEndOf="@+id/openJio_title">
+
+            <TextView
+                android:id="@+id/openJio_myJio_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="my jios"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="15dp"
+                android:layout_marginTop="6dp"
+                android:layout_toEndOf="@+id/openJio_myJio_title"
+                android:src="@drawable/ic_right_arrow" />
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+
+
+    <com.github.badoualy.datepicker.DatePickerTimeline
+        android:id="@+id/openJio_calendar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:mti_bgLblTodayColor="@color/cardview_dark_background"
+        app:mti_primaryColor="@color/mti_default_primary"/>
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/openJio_userEvents_recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="100dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Friend's Jios"
+        android:padding="8dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/mti_default_primary_dark"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/openJio_friendJios_recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </LinearLayout>

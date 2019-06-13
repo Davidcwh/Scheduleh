@@ -9,8 +9,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -31,11 +34,13 @@ public class EditEventActivity extends AppCompatActivity {
     private EditText edit_event_eventName;
     private EditText edit_event_startTime;
     private EditText edit_event_endTime;
+    private Spinner edit_event_prioritySpinner;
     private Button edit_event_deleteEvent;
     int eventYear;
     int eventMonth;
     int eventDay;
     String eventId;
+    int setPriority;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +67,30 @@ public class EditEventActivity extends AppCompatActivity {
         edit_event_startTime = findViewById(R.id.edit_event_startTime_editText);
         edit_event_endTime = findViewById(R.id.edit_event_endTime_editText);
         edit_event_deleteEvent = findViewById(R.id.edit_event_deleteEvent_button);
+        edit_event_prioritySpinner = findViewById(R.id.edit_event_prioritySpinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.priority_array, android.R.layout.simple_spinner_dropdown_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        edit_event_prioritySpinner.setAdapter(adapter);
+
+        edit_event_prioritySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selected = parent.getItemAtPosition(position).toString();
+                if (selected.equals("Low")) {
+                    setPriority = 1;
+                } else if (selected.equals("Medium")) {
+                    setPriority = 2;
+                } else if (selected.equals("High")) {
+                    setPriority = 3;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         // Setting the edit texts' initial text to contain the original event information
         documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -74,6 +103,7 @@ public class EditEventActivity extends AppCompatActivity {
                         edit_event_eventName.setText(event.getEventName());
                         edit_event_startTime.setText(event.getStartTime() + "");
                         edit_event_endTime.setText(event.getEndTime() + "");
+                        setPriority = event.getPriority(); // initial priority
                     } else {
                         Toast.makeText(EditEventActivity.this, "Event not found", Toast.LENGTH_SHORT).show();
                     }
@@ -186,6 +216,7 @@ public class EditEventActivity extends AppCompatActivity {
         documentReference.update("eventName", eventName);
         documentReference.update("startTime", Double.parseDouble(startTime));
         documentReference.update("endTime", Double.parseDouble(endTime));
+        documentReference.update("priority", setPriority);
 
         // Updating the event in all of the user's friends' "friend jios" collection, if it is there.
         CollectionReference allFriends = db.collection("users").document(mAuth.getCurrentUser().getUid())
@@ -207,6 +238,7 @@ public class EditEventActivity extends AppCompatActivity {
                                     ref.update("eventName", eventName);
                                     ref.update("startTime", Double.parseDouble(startTime));
                                     ref.update("endTime", Double.parseDouble(endTime));
+                                    ref.update("priority", setPriority);
                                 }
                             }
                         });
@@ -227,6 +259,7 @@ public class EditEventActivity extends AppCompatActivity {
                     ref.update("eventName", eventName);
                     ref.update("startTime", Double.parseDouble(startTime));
                     ref.update("endTime", Double.parseDouble(endTime));
+                    ref.update("priority", setPriority);
                 }
             }
         });
