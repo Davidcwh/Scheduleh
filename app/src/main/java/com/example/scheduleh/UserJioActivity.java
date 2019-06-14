@@ -26,11 +26,14 @@ public class UserJioActivity extends AppCompatActivity {
         setUpRecyclerView();
     }
 
+    // Sets up a recycler view to display the current user's events for openjio
+    // In this list, the user is able to select options like see the list of friends coming for each jio,
+    // and the option to remove the event from openjio
     private void setUpRecyclerView() {
         userJioRef = db.collection("users").document(mAuth.getCurrentUser().getUid())
                 .collection("user jios");
 
-        Query query = userJioRef.whereEqualTo("userId", mAuth.getCurrentUser().getUid());
+        Query query = userJioRef.whereEqualTo("userId", mAuth.getCurrentUser().getUid()).orderBy("startTime");
 
         FirestoreRecyclerOptions<Event> options = new FirestoreRecyclerOptions.Builder<Event>()
                 .setQuery(query, Event.class)

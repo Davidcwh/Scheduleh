@@ -1,5 +1,7 @@
 package com.example.scheduleh;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +13,15 @@ import android.widget.TextView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class UserJioAdapter extends FirestoreRecyclerAdapter<Event, UserJioAdapter.UserJioHolder> {
 
@@ -80,7 +91,79 @@ public class UserJioAdapter extends FirestoreRecyclerAdapter<Event, UserJioAdapt
             buttonFriendsJoining = itemView.findViewById(R.id.userJio_friendsJoining_button);
             buttonRemoveJio = itemView.findViewById(R.id.userJio_removeJio_button);
 
+            buttonFriendsJoining.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Context context = v.getContext();
+                    Intent intent = new Intent(context, FriendsJoiningActivity.class);
+                    intent.putExtra("eventId", getSnapshots().getSnapshot(getAdapterPosition()).getId());
+                    intent.putExtra("userId", FirebaseAuth.getInstance().getCurrentUser().getUid());
+                    context.startActivity(intent);
+                }
+            });
 
+            // Removes user's event from openjio
+            buttonRemoveJio.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                    final DocumentSnapshot documentSnapshot = getSnapshots().getSnapshot(getAdapterPosition());
+
+                    //Delete the event in the user's user jios collection
+                    db.collection("users").document(currentUser.getUid())
+                            .collection("user jios").document(documentSnapshot.getId())
+                            .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.getResult().exists()) {
+                                task.getResult().getReference().delete();
+                            }
+                        }
+                    });
+
+                    CollectionReference allFriends = db.collection("users").document(currentUser.getUid())
+                            .collection("friend list");
+                    allFriends.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot friend: task.getResult()) {
+                                    // Delete user's jio from each friend's friend jios collection, if it is inside it.
+                                    db.collection("users").document(friend.getId())
+                                            .collection("friend jios").document(documentSnapshot.getId())
+                                            .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                            if (task.getResult().exists()) {
+                                                task.getResult().getReference().delete();
+                                            }
+                                        }
+                                    });
+
+                                    // If user's jio is not in friend's friend jios collection, means the friend already joined
+                                    // the jio and the event is saved in the friend's events collection.
+                                    // Thus, delete user's jio from each friend's friend jios collection, if it is inside it.
+                                    db.collection("users").document(friend.getId())
+                                            .collection("events").document(documentSnapshot.getId())
+                                            .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                            if (task.getResult().exists()) {
+                                                task.getResult().getReference().delete();
+                                            }
+                                        }
+                                    });
+
+
+                                }
+                            }
+                        }
+                    });
+
+
+                }
+            });
 
         }
     }

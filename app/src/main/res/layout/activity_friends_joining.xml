@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".FriendsJoiningActivity">
+
+    <TextView
+        android:id="@+id/friends_joining_textView"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/add_a_friend_editText"
+        android:text="Friends Joining"
+        android:textAlignment="center"
+        android:background="@color/mti_default_primary_dark"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+
+    <TextView
+        android:id="@+id/friends_joining_number_textView"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/friends_joining_textView"
+        android:layout_alignParentRight="true"
+        android:textAlignment="center"
+        android:text="0"
+        android:background="@color/cardview_dark_background"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/friends_joining_recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/friends_joining_textView">
+
+    </android.support.v7.widget.RecyclerView>
+
+</RelativeLayout>
