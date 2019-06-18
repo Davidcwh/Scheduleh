@@ -1,6 +1,8 @@
 package com.example.scheduleh;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -26,14 +29,20 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import net.steamcrafted.lineartimepicker.dialog.LinearTimePickerDialog;
+
 public class EditEventActivity extends AppCompatActivity {
 
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
     private DocumentReference documentReference;
     private EditText edit_event_eventName;
-    private EditText edit_event_startTime;
-    private EditText edit_event_endTime;
+    private TextView edit_event_startTime;
+    private TextView edit_event_endTime;
+    private Button select_startTime;
+    private Button select_endTime;
+    LinearTimePickerDialog dialogStartTime;
+    LinearTimePickerDialog dialogEndTime;
     private Spinner edit_event_prioritySpinner;
     private Button edit_event_deleteEvent;
     int eventYear;
@@ -64,8 +73,73 @@ public class EditEventActivity extends AppCompatActivity {
 
         // Initializing edit texts and button
         edit_event_eventName = findViewById(R.id.edit_event_eventName_editText);
-        edit_event_startTime = findViewById(R.id.edit_event_startTime_editText);
-        edit_event_endTime = findViewById(R.id.edit_event_endTime_editText);
+        edit_event_startTime = findViewById(R.id.edit_event_startTime_textView);
+        edit_event_endTime = findViewById(R.id.edit_event_endTime_textView);
+        select_startTime = findViewById(R.id.edit_event_startTime_button);
+        select_endTime = findViewById(R.id.edit_event_endTime_button);
+
+        dialogStartTime = LinearTimePickerDialog.Builder.with(this)
+                .setTextColor(Color.parseColor("#ffffff"))
+                .setButtonCallback(new LinearTimePickerDialog.ButtonCallback() {
+                    @Override
+                    public void onPositive(DialogInterface dialog, int hour, int minutes) {
+                        String setHour = hour + "";
+                        String setMinutes = minutes + "";
+
+                        if (minutes == 0) {
+                            setMinutes = "00";
+                        }
+                        if (hour < 10) {
+                            setHour = "0" + hour;
+                        }
+
+                        edit_event_startTime.setText(setHour + ":" + setMinutes);
+                    }
+
+                    @Override
+                    public void onNegative(DialogInterface dialog) {
+
+                    }
+                })
+                .build();
+        select_startTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogStartTime.show();
+            }
+        });
+
+        dialogEndTime = LinearTimePickerDialog.Builder.with(this)
+                .setTextColor(Color.parseColor("#ffffff"))
+                .setButtonCallback(new LinearTimePickerDialog.ButtonCallback() {
+                    @Override
+                    public void onPositive(DialogInterface dialog, int hour, int minutes) {
+                        String setHour = hour + "";
+                        String setMinutes = minutes + "";
+
+                        if (minutes == 0) {
+                            setMinutes = "00";
+                        }
+                        if (hour < 10) {
+                            setHour = "0" + hour;
+                        }
+
+                        edit_event_endTime.setText(setHour + ":" + setMinutes);
+                    }
+
+                    @Override
+                    public void onNegative(DialogInterface dialog) {
+
+                    }
+                })
+                .build();
+        select_endTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogEndTime.show();
+            }
+        });
+
         edit_event_deleteEvent = findViewById(R.id.edit_event_deleteEvent_button);
         edit_event_prioritySpinner = findViewById(R.id.edit_event_prioritySpinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
@@ -101,8 +175,8 @@ public class EditEventActivity extends AppCompatActivity {
                     if (documentSnapshot != null) {
                         Event event = documentSnapshot.toObject(Event.class);
                         edit_event_eventName.setText(event.getEventName());
-                        edit_event_startTime.setText(event.getStartTime() + "");
-                        edit_event_endTime.setText(event.getEndTime() + "");
+                        edit_event_startTime.setText(event.getStartTime());
+                        edit_event_endTime.setText(event.getEndTime());
                         setPriority = event.getPriority(); // initial priority
                     } else {
                         Toast.makeText(EditEventActivity.this, "Event not found", Toast.LENGTH_SHORT).show();
@@ -146,7 +220,7 @@ public class EditEventActivity extends AppCompatActivity {
         // #1: deletes the event document saved in the user's events collection
         documentReference.delete();
 
-        // #2: deletes the event document in all friends' "friend jio" collection, if it is there.
+        // #2: deletes the event document in all friends' "friend jio" and "events" collection, if it is there.
         CollectionReference allFriends = db.collection("users").document(mAuth.getCurrentUser().getUid())
                 .collection("friend list");
         allFriends.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -157,6 +231,18 @@ public class EditEventActivity extends AppCompatActivity {
                         // for each friend, search their "friend jios" list for the event
                         db.collection("users").document(friend.getId())
                                 .collection("friend jios")
+                                .document(documentReference.getId())
+                                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.getResult().exists()) { // if the event is in the collection, delete it
+                                    task.getResult().getReference().delete();
+                                }
+                            }
+                        });
+
+                        db.collection("users").document(friend.getId())
+                                .collection("events")
                                 .document(documentReference.getId())
                                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                             @Override
@@ -214,8 +300,8 @@ public class EditEventActivity extends AppCompatActivity {
 
         // Updating the event in the user's events collection
         documentReference.update("eventName", eventName);
-        documentReference.update("startTime", Double.parseDouble(startTime));
-        documentReference.update("endTime", Double.parseDouble(endTime));
+        documentReference.update("startTime", startTime);
+        documentReference.update("endTime", endTime);
         documentReference.update("priority", setPriority);
 
         // Updating the event in all of the user's friends' "friend jios" collection, if it is there.
@@ -236,8 +322,8 @@ public class EditEventActivity extends AppCompatActivity {
                                 if (task.getResult().exists()) { // if the event is in the collection, delete it
                                     DocumentReference ref = task.getResult().getReference();
                                     ref.update("eventName", eventName);
-                                    ref.update("startTime", Double.parseDouble(startTime));
-                                    ref.update("endTime", Double.parseDouble(endTime));
+                                    ref.update("startTime", startTime);
+                                    ref.update("endTime", endTime);
                                     ref.update("priority", setPriority);
                                 }
                             }
@@ -257,8 +343,8 @@ public class EditEventActivity extends AppCompatActivity {
                 if (task.getResult().exists()) {
                     DocumentReference ref = task.getResult().getReference();
                     ref.update("eventName", eventName);
-                    ref.update("startTime", Double.parseDouble(startTime));
-                    ref.update("endTime", Double.parseDouble(endTime));
+                    ref.update("startTime", startTime);
+                    ref.update("endTime", endTime);
                     ref.update("priority", setPriority);
                 }
             }

@@ -2,8 +2,8 @@ package com.example.scheduleh;
 
 public class Event {
     private String eventName;
-    private double startTime;
-    private double endTime;
+    private String startTime;
+    private String endTime;
     private int year;
     private int month;
     private int day;
@@ -16,7 +16,7 @@ public class Event {
         //empty constructor needed
     }
 
-    public Event(String eventName, double startTime, double endTime, int year, int month, int day, String userId, String displayName) {
+    public Event(String eventName, String startTime, String endTime, int year, int month, int day, String userId, String displayName) {
         this.eventName = eventName;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -42,11 +42,11 @@ public class Event {
         return eventName;
     }
 
-    public double getStartTime() {
+    public String getStartTime() {
         return startTime;
     }
 
-    public double getEndTime() {
+    public String getEndTime() {
         return endTime;
     }
 
@@ -82,11 +82,11 @@ public class Event {
         this.eventName = eventName;
     }
 
-    public void setStartTime(double startTime) {
+    public void setStartTime(String startTime) {
         this.startTime = startTime;
     }
 
-    public void setEndTime(double duration) {
+    public void setEndTime(String duration) {
         this.endTime = duration;
     }
 

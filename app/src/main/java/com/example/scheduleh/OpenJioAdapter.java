@@ -3,7 +3,6 @@ package com.example.scheduleh;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,16 +27,8 @@ public class OpenJioAdapter extends FirestoreRecyclerAdapter<Event, OpenJioAdapt
 
     @Override
     protected void onBindViewHolder(@NonNull OpenJioHolder holder, int position, @NonNull Event model) {
-        String AMPM = "AM";
-
-        if (model.getStartTime() >= 12) {
-            AMPM = "PM";
-        }
-        holder.textViewStartTime.setText(String.valueOf(model.getStartTime()) + " " + AMPM);
-        if (model.getEndTime() >= 12) {
-            AMPM = "PM";
-        }
-        holder.textViewEndTime.setText(String.valueOf(model.getEndTime()) + " " + AMPM);
+        holder.textViewStartTime.setText(model.getStartTime());
+        holder.textViewEndTime.setText(model.getEndTime());
         holder.textViewEventName.setText(model.getEventName());
         holder.textViewDisplayName.setText(model.getDisplayName());
 

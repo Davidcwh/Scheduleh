@@ -34,18 +34,8 @@ public class EventAdapter extends FirestoreRecyclerAdapter<Event, EventAdapter.E
 
     @Override
     protected void onBindViewHolder(@NonNull EventHolder holder, int position, @NonNull Event model) {
-        String AMPM = "AM";
-
-        if (model.getStartTime() >= 12) {
-            AMPM = "PM";
-        }
-        holder.textViewStartTime.setText(model.getStartTime() + " " + AMPM);
-
-        if (model.getEndTime() >= 12) {
-            AMPM = "PM";
-        }
-        holder.textViewEndTime.setText(model.getEndTime() + " " + AMPM);
-
+        holder.textViewStartTime.setText(model.getStartTime());
+        holder.textViewEndTime.setText(model.getEndTime());
         holder.textViewEventName.setText(model.getEventName());
 
         if (model.getPriority() == 1) {

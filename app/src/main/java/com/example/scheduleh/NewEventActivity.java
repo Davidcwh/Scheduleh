@@ -1,7 +1,10 @@
 package com.example.scheduleh;
 
 import android.app.ActionBar;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,8 +14,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -20,11 +25,18 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import net.steamcrafted.lineartimepicker.dialog.LinearDatePickerDialog;
+import net.steamcrafted.lineartimepicker.dialog.LinearTimePickerDialog;
+
 public class NewEventActivity extends AppCompatActivity {
     private EditText new_event_eventName;
-    private EditText new_event_startTime;
-    private EditText new_event_endTime;
+    private Button select_startTime;
+    private Button select_endTime;
+    private TextView new_event_startTime;
+    private TextView new_event_endTime;
     private Spinner new_event_prioritySpinner;
+    LinearTimePickerDialog dialogStartTime;
+    LinearTimePickerDialog dialogEndTime;
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
     String setPriority;
@@ -33,11 +45,78 @@ public class NewEventActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_event);
-        new_event_eventName = findViewById(R.id.new_event_eventName_editText);
-        new_event_startTime = findViewById(R.id.new_event_startTime_editText);
-        new_event_endTime = findViewById(R.id.new_event_endTime_editText);
+
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
+
+        new_event_eventName = findViewById(R.id.new_event_eventName_editText);
+        new_event_startTime = findViewById(R.id.new_event_startTime_textView);
+        new_event_endTime = findViewById(R.id.new_event_endTime_textView);
+        select_startTime = findViewById(R.id.new_event_startTime_button);
+        select_endTime = findViewById(R.id.new_event_endTime_button);
+
+        dialogStartTime = LinearTimePickerDialog.Builder.with(this)
+                .setTextColor(Color.parseColor("#ffffff"))
+                .setButtonCallback(new LinearTimePickerDialog.ButtonCallback() {
+                    @Override
+                    public void onPositive(DialogInterface dialog, int hour, int minutes) {
+                        String setHour = hour + "";
+                        String setMinutes = minutes + "";
+
+                        if (minutes == 0) {
+                            setMinutes = "00";
+                        }
+                        if (hour < 10) {
+                            setHour = "0" + hour;
+                        }
+
+                        new_event_startTime.setText(setHour + ":" + setMinutes);
+                    }
+
+                    @Override
+                    public void onNegative(DialogInterface dialog) {
+
+                    }
+                })
+                .build();
+        select_startTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogStartTime.show();
+            }
+        });
+
+        dialogEndTime = LinearTimePickerDialog.Builder.with(this)
+                .setTextColor(Color.parseColor("#ffffff"))
+                .setButtonCallback(new LinearTimePickerDialog.ButtonCallback() {
+                    @Override
+                    public void onPositive(DialogInterface dialog, int hour, int minutes) {
+                        String setHour = hour + "";
+                        String setMinutes = minutes + "";
+
+                        if (minutes == 0) {
+                            setMinutes = "00";
+                        }
+                        if (hour < 10) {
+                            setHour = "0" + hour;
+                        }
+
+                        new_event_endTime.setText(setHour + ":" + setMinutes);
+                    }
+
+                    @Override
+                    public void onNegative(DialogInterface dialog) {
+
+                    }
+                })
+                .build();
+        select_endTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogEndTime.show();
+            }
+        });
+
 
         new_event_prioritySpinner = findViewById(R.id.new_event_prioritySpinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
@@ -49,7 +128,6 @@ public class NewEventActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 setPriority = parent.getItemAtPosition(position).toString();
-                Log.i("Test spinner text:", setPriority);
             }
 
             @Override
@@ -111,7 +189,7 @@ public class NewEventActivity extends AppCompatActivity {
                 .collection("events");
 
         // creating event object for the new event
-        Event newEvent = new Event(eventName, Double.parseDouble(startTime), Double.parseDouble(endTime), eventYear, eventMonth, eventDay,
+        Event newEvent = new Event(eventName, startTime, endTime, eventYear, eventMonth, eventDay,
                 currentUser.getUid(), currentUser.getDisplayName());
         if (setPriority != null) {
             if (setPriority.equals("High")) {

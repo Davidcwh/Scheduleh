@@ -7,16 +7,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -72,8 +75,8 @@ public class FriendRequestAdapter extends FirestoreRecyclerAdapter<User, FriendR
         }
 
         // Adds the given document snapshot user to the current user's friend list and vice versa
-        private void addToFriend(DocumentSnapshot documentSnapshot) {
-            FirebaseUser currentUser = mAuth.getCurrentUser();
+        private void addToFriend(final DocumentSnapshot documentSnapshot) {
+            final FirebaseUser currentUser = mAuth.getCurrentUser();
 
             //Adding the given document snapshot user to the current user's friend list
             Map<String, Object> addFriendToUser = new HashMap<>();
@@ -92,6 +95,38 @@ public class FriendRequestAdapter extends FirestoreRecyclerAdapter<User, FriendR
                     .collection("friend list")
                     .document(currentUser.getUid())
                     .set(addUserToFriend);
+
+            // Adding the document snapshot user's openjio events to current user's friend jios
+            db.collection("users").document(documentSnapshot.getId())
+                    .collection("user jios").get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (!task.getResult().isEmpty()) {
+                                for (QueryDocumentSnapshot jioEvent: task.getResult()) {
+                                    db.collection("users").document(currentUser.getUid())
+                                            .collection("friend jios").document(jioEvent.getId())
+                                            .set(jioEvent.getData());
+                                }
+                            }
+                        }
+                    });
+
+            // Adding the current user's openjio events to document snapshot user's friend jios
+            db.collection("users").document(currentUser.getUid())
+                    .collection("user jios").get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (!task.getResult().isEmpty()) {
+                                for (QueryDocumentSnapshot jioEvent: task.getResult()) {
+                                    db.collection("users").document(documentSnapshot.getId())
+                                            .collection("friend jios").document(jioEvent.getId())
+                                            .set(jioEvent.getData());
+                                }
+                            }
+                        }
+                    });
 
             Log.i(getClass().getName(), documentSnapshot.get("displayName") + " added to friends list");
         }
