@@ -40,6 +40,8 @@ public class NewEventActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
     String setPriority;
+    String startTimeInt;
+    String endTimeInt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +65,7 @@ public class NewEventActivity extends AppCompatActivity {
                         String setHour = hour + "";
                         String setMinutes = minutes + "";
 
+
                         if (minutes == 0) {
                             setMinutes = "00";
                         }
@@ -71,6 +74,7 @@ public class NewEventActivity extends AppCompatActivity {
                         }
 
                         new_event_startTime.setText(setHour + ":" + setMinutes);
+                        startTimeInt = "" + setHour + setMinutes;
                     }
 
                     @Override
@@ -94,6 +98,7 @@ public class NewEventActivity extends AppCompatActivity {
                         String setHour = hour + "";
                         String setMinutes = minutes + "";
 
+
                         if (minutes == 0) {
                             setMinutes = "00";
                         }
@@ -102,6 +107,7 @@ public class NewEventActivity extends AppCompatActivity {
                         }
 
                         new_event_endTime.setText(setHour + ":" + setMinutes);
+                        endTimeInt = "" + setHour + setMinutes;
                     }
 
                     @Override
@@ -168,11 +174,19 @@ public class NewEventActivity extends AppCompatActivity {
         }
         if (startTime.trim().isEmpty()) {
             new_event_startTime.setError("Start time required");
+            Toast.makeText(this, "Start time required", Toast.LENGTH_SHORT).show();
             new_event_startTime.requestFocus();
             return;
         }
         if (endTime.trim().isEmpty()) {
             new_event_endTime.setError("End time required");
+            Toast.makeText(this, "End time required", Toast.LENGTH_SHORT).show();
+            new_event_endTime.requestFocus();
+            return;
+        }
+
+        if (Integer.parseInt(startTimeInt) >= Integer.parseInt(endTimeInt)) {
+            Toast.makeText(this, "End time cannot be earlier than start time!", Toast.LENGTH_SHORT).show();
             new_event_endTime.requestFocus();
             return;
         }

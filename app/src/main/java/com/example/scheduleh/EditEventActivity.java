@@ -50,6 +50,8 @@ public class EditEventActivity extends AppCompatActivity {
     int eventDay;
     String eventId;
     int setPriority;
+    String startTimeInt;
+    String endTimeInt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +96,7 @@ public class EditEventActivity extends AppCompatActivity {
                         }
 
                         edit_event_startTime.setText(setHour + ":" + setMinutes);
+                        startTimeInt = "" + setHour + setMinutes;
                     }
 
                     @Override
@@ -125,6 +128,7 @@ public class EditEventActivity extends AppCompatActivity {
                         }
 
                         edit_event_endTime.setText(setHour + ":" + setMinutes);
+                        endTimeInt = "" + setHour + setMinutes;
                     }
 
                     @Override
@@ -178,6 +182,8 @@ public class EditEventActivity extends AppCompatActivity {
                         edit_event_startTime.setText(event.getStartTime());
                         edit_event_endTime.setText(event.getEndTime());
                         setPriority = event.getPriority(); // initial priority
+                        startTimeInt = event.getStartTime().substring(0, 2) + event.getStartTime().substring(3);
+                        endTimeInt = event.getEndTime().substring(0, 2) + event.getEndTime().substring(3);
                     } else {
                         Toast.makeText(EditEventActivity.this, "Event not found", Toast.LENGTH_SHORT).show();
                     }
@@ -294,6 +300,13 @@ public class EditEventActivity extends AppCompatActivity {
         }
         if (endTime.trim().isEmpty()) {
             edit_event_endTime.setError("End time required");
+            edit_event_endTime.requestFocus();
+            return;
+        }
+
+        if (Integer.parseInt(startTimeInt) >= Integer.parseInt(endTimeInt)) {
+            Toast.makeText(this, "End time cannot be earlier than start time!", Toast.LENGTH_SHORT).show();
+            edit_event_endTime.requestFocus();
             edit_event_endTime.requestFocus();
             return;
         }
