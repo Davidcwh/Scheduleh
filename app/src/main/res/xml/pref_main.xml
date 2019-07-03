@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:filterTouchesWhenObscured="false"
+    android:fitsSystemWindows="false"
+    android:keepScreenOn="false"
+    android:key="first_preferencescreen">
+    <PreferenceCategory
+        android:title="General">
+        <android.support.v7.preference.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="theme_switch"
+            android:summary="Turn on for light theme"
+            android:title="Theme">
+
+        </android.support.v7.preference.SwitchPreferenceCompat>
+    </PreferenceCategory>
+    <Preference
+        android:key="edit_profile"
+        android:title="Edit Profile"
+        android:summary="Change profile picture and username"></Preference>
+    <Preference
+        android:key="edit_email"
+        android:title="Change Email"></Preference>
+    <PreferenceCategory
+        android:title="Privacy setting">
+        <Preference
+            android:key="edit_password"
+            android:title="Change Password"></Preference>
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="About">
+        <Preference
+            android:title="App Version"
+            android:summary="Version 1.0.0"
+            android:key="Appversion"></Preference>
+    </PreferenceCategory>
+    <Preference
+        android:key="logOutButton"
+        android:title="Log out">
+    </Preference>
+</android.support.v7.preference.PreferenceScreen>
