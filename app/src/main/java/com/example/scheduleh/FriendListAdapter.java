@@ -10,8 +10,10 @@ import android.widget.TextView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 public class FriendListAdapter extends FirestoreRecyclerAdapter<User, FriendListAdapter.FriendListHolder> {
+    private OnItemClickListener listener;
 
     public FriendListAdapter(@NonNull FirestoreRecyclerOptions<User> options) {
         super(options);
@@ -32,12 +34,31 @@ public class FriendListAdapter extends FirestoreRecyclerAdapter<User, FriendList
     class FriendListHolder extends RecyclerView.ViewHolder {
         TextView userDisplayNameTextView;
         ImageButton friendProfilePic;
-        
+
         public FriendListHolder(@NonNull View itemView) {
             super(itemView);
             userDisplayNameTextView = itemView.findViewById(R.id.friendListItem_displayName_textView);
             friendProfilePic = itemView.findViewById(R.id.friendListItem_profilePhoto_imageButton);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION && listener != null) {
+                        listener.OnItemClick(getSnapshots().getSnapshot(position), position);
+                    }
+                }
+            });
         }
 
+    }
+
+    // used for selecting friends in friend list to sync schedules
+    public interface OnItemClickListener {
+        void OnItemClick(DocumentSnapshot documentSnapshot, int position);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
     }
 }

@@ -41,7 +41,7 @@
     <TextView
         android:id="@+id/set_duration_textView"
         android:layout_width="match_parent"
-        android:layout_height="35dp"
+        android:layout_height="wrap_content"
         android:padding="8dp"
         android:layout_below="@+id/sync_friends_endDate_button"
         android:textAlignment="center"
@@ -85,5 +85,31 @@
         android:layout_height="40dp"
         android:layout_below="@+id/set_hours_textView"
         android:layout_toEndOf="@+id/set_minutes_textView"/>
+
+    <TextView
+        android:id="@+id/select_friends_textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_below="@+id/set_minutes_textView"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:background="@color/colorPrimaryDark"
+        android:text="Select Friends"
+        />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/sync_friends_recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/select_friends_textView">
+    </android.support.v7.widget.RecyclerView>
+
+    <Button
+        android:id="@+id/sync_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="Sync"/>
 
 </RelativeLayout>

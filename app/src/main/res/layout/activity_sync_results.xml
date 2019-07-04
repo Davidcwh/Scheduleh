@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SyncResultsActivity">
+
+    <TextView
+        android:id="@+id/suggested_time_slots"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:text="Suggested Time Slots"
+        android:padding="8dp"
+        android:textAlignment="center"
+        android:background="@color/colorPrimaryDark"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/sync_results_recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/suggested_time_slots">
+    </android.support.v7.widget.RecyclerView>
+
+</RelativeLayout>
