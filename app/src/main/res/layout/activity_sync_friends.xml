@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SyncFriendsActivity">
+
+    <Button
+        android:id="@+id/sync_friends_startDate_button"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:text="Start date"/>
+
+    <TextView
+        android:id="@+id/sync_friends_startDate_textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_toEndOf="@+id/sync_friends_startDate_button"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+    <Button
+        android:id="@+id/sync_friends_endDate_button"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/sync_friends_startDate_button"
+        android:text="End date"/>
+
+    <TextView
+        android:id="@+id/sync_friends_endDate_textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/sync_friends_startDate_button"
+        android:layout_toEndOf="@+id/sync_friends_endDate_button"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+    <TextView
+        android:id="@+id/set_duration_textView"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:padding="8dp"
+        android:layout_below="@+id/sync_friends_endDate_button"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:background="@color/colorPrimaryDark"
+        android:text="Set Duration"/>
+
+    <TextView
+        android:id="@+id/set_hours_textView"
+        android:layout_width="120dp"
+        android:layout_height="40dp"
+        android:layout_below="@+id/set_duration_textView"
+        android:padding="8dp"
+        android:background="@color/cardview_dark_background"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textAlignment="center"
+        android:text="Hours:"/>
+
+    <Spinner
+        android:id="@+id/set_hours_Spinner"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/set_duration_textView"
+        android:layout_toEndOf="@+id/set_hours_textView"/>
+
+    <TextView
+        android:id="@+id/set_minutes_textView"
+        android:layout_width="120dp"
+        android:layout_height="40dp"
+        android:layout_below="@+id/set_hours_textView"
+        android:padding="8dp"
+        android:textAlignment="center"
+        android:layout_marginTop="8dp"
+        android:background="@color/cardview_dark_background"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:text="Minutes:"/>
+
+    <Spinner
+        android:id="@+id/set_minutes_Spinner"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/set_hours_textView"
+        android:layout_toEndOf="@+id/set_minutes_textView"/>
+
+</RelativeLayout>

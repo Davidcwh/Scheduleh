@@ -64,12 +64,37 @@
         android:layout_toEndOf="@id/add_a_friend_editText"
         android:src="@drawable/ic_home_friends" />
 
+    <RelativeLayout
+        android:id="@+id/sync_with_friends_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/add_a_friend_editText"
+        android:background="@color/mti_default_primary_dark"
+        android:orientation="vertical"
+        android:layout_marginTop="10dp"
+        android:padding="8dp">
+
+        <TextView
+            android:id="@+id/sync_with_friends_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sync with Friends" />
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_sync" />
+
+    </RelativeLayout>
+
     <TextView
         android:id="@+id/friends_list_textView"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/add_a_friend_editText"
-        android:layout_marginTop="20dp"
+        android:layout_below="@+id/sync_with_friends_layout"
+        android:layout_marginTop="10dp"
         android:text="Friends List"
         android:textAlignment="center"
         android:background="@color/colorPrimaryDark" />
@@ -78,10 +103,10 @@
         android:id="@+id/friends_number_textView"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/add_a_friend_editText"
-        android:layout_marginTop="20dp"
+        android:layout_below="@id/sync_with_friends_layout"
         android:layout_toRightOf="@id/friends_list_textView"
         android:textAlignment="center"
+        android:layout_marginTop="10dp"
         android:text="0 friend(s)"
         android:background="@color/cardview_dark_background"/>
 

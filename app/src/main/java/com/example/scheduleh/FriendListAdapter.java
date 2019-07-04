@@ -32,11 +32,12 @@ public class FriendListAdapter extends FirestoreRecyclerAdapter<User, FriendList
     class FriendListHolder extends RecyclerView.ViewHolder {
         TextView userDisplayNameTextView;
         ImageButton friendProfilePic;
-
+        
         public FriendListHolder(@NonNull View itemView) {
             super(itemView);
             userDisplayNameTextView = itemView.findViewById(R.id.friendListItem_displayName_textView);
             friendProfilePic = itemView.findViewById(R.id.friendListItem_profilePhoto_imageButton);
         }
+
     }
 }

@@ -46,6 +46,7 @@ public class FriendsActivity extends AppCompatActivity implements View.OnClickLi
         friends_number_textView = findViewById(R.id.friends_number_textView);
         findViewById(R.id.friends_request_layout).setOnClickListener(this);
         findViewById(R.id.add_a_friend_button).setOnClickListener(this);
+        findViewById(R.id.sync_with_friends_layout).setOnClickListener(this);
 
         setUpRecyclerView();
 
@@ -60,6 +61,8 @@ public class FriendsActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.add_a_friend_button:
                 sendFriendRequest();
                 break;
+            case R.id.sync_with_friends_layout:
+                startActivity(new Intent(this, SyncFriendsActivity.class));
         }
     }
 
