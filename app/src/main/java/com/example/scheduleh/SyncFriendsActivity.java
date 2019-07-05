@@ -39,8 +39,6 @@ public class SyncFriendsActivity extends AppCompatActivity {
     private Button sync_button;
     private Button sync_friends_startDate_button;
     private Button sync_friends_endDate_button;
-    private TextView sync_friends_startDate_textView;
-    private TextView sync_friends_endDate_textView;
     private DatePickerDialog dialogStartDate;
     private DatePickerDialog dialogEndDate;
     private Spinner set_hours_spinner;
@@ -64,15 +62,13 @@ public class SyncFriendsActivity extends AppCompatActivity {
         sync_button = findViewById(R.id.sync_button);
         sync_friends_startDate_button = findViewById(R.id.sync_friends_startDate_button);
         sync_friends_endDate_button = findViewById(R.id.sync_friends_endDate_button);
-        sync_friends_startDate_textView = findViewById(R.id.sync_friends_startDate_textView);
-        sync_friends_endDate_textView = findViewById(R.id.sync_friends_endDate_textView);
 
         // Setting up start and end date pickers
         Calendar calendar = Calendar.getInstance();
         dialogStartDate = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                sync_friends_startDate_textView.setText(dayOfMonth + "/" + (month + 1) + "/" + year);
+                sync_friends_startDate_button.setText( "Start Date: " + dayOfMonth + "/" + (month + 1) + "/" + year);
 
                 startDay = dayOfMonth;
                 startMonth = month;
@@ -91,7 +87,7 @@ public class SyncFriendsActivity extends AppCompatActivity {
         dialogEndDate = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                sync_friends_endDate_textView.setText(dayOfMonth + "/" + (month + 1) + "/" + year);
+                sync_friends_endDate_button.setText("End Date: " + dayOfMonth + "/" + (month + 1) + "/" + year);
 
                 endDay = dayOfMonth;
                 endMonth = month;
@@ -193,12 +189,12 @@ public class SyncFriendsActivity extends AppCompatActivity {
 
     private void startSync() {
         // validation checks
-        if (sync_friends_startDate_textView.getText().toString().isEmpty()) {
+        if (sync_friends_startDate_button.getText().toString().equals("Start date")) {
             Toast.makeText(this, "Please enter a start date", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if (sync_friends_endDate_textView.getText().toString().isEmpty()) {
+        if (sync_friends_endDate_button.getText().toString().equals("End date")) {
             Toast.makeText(this, "Please enter an end date", Toast.LENGTH_SHORT).show();
             return;
         }

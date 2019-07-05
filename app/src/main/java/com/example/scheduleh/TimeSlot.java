@@ -1,6 +1,7 @@
 package com.example.scheduleh;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 // Class used to display results of sync function
@@ -12,6 +13,7 @@ public class TimeSlot implements Comparable<TimeSlot>{
     private int day;
     private int free;
     private int busy;
+    private ArrayList<String> busyUsers;
     private int priority;
     private Date date;
 
@@ -23,11 +25,28 @@ public class TimeSlot implements Comparable<TimeSlot>{
         this.day = day;
         this.free = free;
         this.busy = busy;
+        this.busyUsers = new ArrayList<>();
         this.priority = 0;
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
         try {
             date = simpleDateFormat.parse(day + "/" + month + "/" + year);
         } catch (Exception e) {e.printStackTrace();}
+    }
+
+    public void addBusyUser(String userId) {
+        this.busyUsers.add(userId);
+    }
+
+    public boolean containsBusyUser(String userId) {
+        return this.busyUsers.contains(userId);
+    }
+
+    public ArrayList<String> getBusyUsers() {
+        return busyUsers;
+    }
+
+    public void setBusyUsers(ArrayList<String> busyUsers) {
+        this.busyUsers = busyUsers;
     }
 
     public int getPriority() {

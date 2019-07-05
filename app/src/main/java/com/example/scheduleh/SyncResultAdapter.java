@@ -31,7 +31,8 @@ public class SyncResultAdapter extends RecyclerView.Adapter<SyncResultAdapter.Sy
         syncResultViewHolder.textViewStartTime.setText(currentSlot.getStartTime() + "     -");
         syncResultViewHolder.textViewEndTime.setText(currentSlot.getEndTime());
         syncResultViewHolder.textViewDate.setText(currentSlot.getDay() + "/" + currentSlot.getMonth() + "/" + currentSlot.getYear());
-        syncResultViewHolder.textViewFreeBusy.setText("Free: " + currentSlot.getFree() + ", Busy: " + currentSlot.getBusy());
+        syncResultViewHolder.textViewFreeBusy.setText("Free: " + currentSlot.getFree() + ", Busy: " + currentSlot.getBusy() +
+                "\n" + "Busy priority: " + currentSlot.getPriority());
     }
 
     @Override

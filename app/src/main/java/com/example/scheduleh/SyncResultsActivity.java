@@ -102,8 +102,13 @@ public class SyncResultsActivity extends AppCompatActivity {
                                 for (TimeSlot timeSlot: timeSlots) {
                                     if (overlapTimings(currentEvent.getStartTime(), currentEvent.getEndTime(), timeSlot.getStartTime(), timeSlot.getEndTime())){
                                         timeSlot.setPriority(timeSlot.getPriority() + currentEvent.getPriority()); // increase priority for timeslot
-                                        timeSlot.setBusy(timeSlot.getBusy() + 1); // update free and busy count
-                                        timeSlot.setFree(timeSlot.getFree() - 1); // for timeslot accordingly
+
+                                        if (!timeSlot.containsBusyUser(currentEvent.getUserId())) {
+                                            timeSlot.setBusy(timeSlot.getBusy() + 1); // update free and busy count
+                                            timeSlot.setFree(timeSlot.getFree() - 1); // for timeslot accordingly
+                                            timeSlot.addBusyUser(currentEvent.getUserId());
+                                        }
+
                                     }
 
                                 }
