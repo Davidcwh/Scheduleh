@@ -1,6 +1,10 @@
 package com.example.scheduleh;
 
-public class TimeSlot {
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+// Class used to display results of sync function
+public class TimeSlot implements Comparable<TimeSlot>{
     private String startTime;
     private String endTime;
     private int year;
@@ -8,6 +12,8 @@ public class TimeSlot {
     private int day;
     private int free;
     private int busy;
+    private int priority;
+    private Date date;
 
     public TimeSlot(String startTime, String endTime, int year, int month, int day, int free, int busy) {
         this.startTime = startTime;
@@ -17,6 +23,27 @@ public class TimeSlot {
         this.day = day;
         this.free = free;
         this.busy = busy;
+        this.priority = 0;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        try {
+            date = simpleDateFormat.parse(day + "/" + month + "/" + year);
+        } catch (Exception e) {e.printStackTrace();}
+    }
+
+    public int getPriority() {
+        return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     public String getStartTime() {
@@ -75,4 +102,16 @@ public class TimeSlot {
         this.busy = busy;
     }
 
+    @Override
+    public int compareTo(TimeSlot o) {
+        if (this.priority != o.priority) {
+            return this.priority - o.priority; // higher priority means more busy people/ lesser people able to make it
+        } else if (!this.date.equals(o.date)) {
+            return this.date.compareTo(o.date);
+        } else if (!this.startTime.equals(o.startTime)){
+            return this.startTime.compareTo(o.startTime);
+        } else {
+            return 0;
+        }
+    }
 }

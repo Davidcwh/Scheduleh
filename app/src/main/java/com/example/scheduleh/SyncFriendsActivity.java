@@ -67,6 +67,7 @@ public class SyncFriendsActivity extends AppCompatActivity {
         sync_friends_startDate_textView = findViewById(R.id.sync_friends_startDate_textView);
         sync_friends_endDate_textView = findViewById(R.id.sync_friends_endDate_textView);
 
+        // Setting up start and end date pickers
         Calendar calendar = Calendar.getInstance();
         dialogStartDate = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -105,6 +106,8 @@ public class SyncFriendsActivity extends AppCompatActivity {
             }
         });
 
+
+        // setting up hours and minutes spinners (to select duration of time slot)
         set_hours_spinner = findViewById(R.id.set_hours_Spinner);
         ArrayAdapter<CharSequence> adapterHours = ArrayAdapter.createFromResource(this,
                 R.array.hours_array, android.R.layout.simple_spinner_dropdown_item);
@@ -189,6 +192,7 @@ public class SyncFriendsActivity extends AppCompatActivity {
     }
 
     private void startSync() {
+        // validation checks
         if (sync_friends_startDate_textView.getText().toString().isEmpty()) {
             Toast.makeText(this, "Please enter a start date", Toast.LENGTH_SHORT).show();
             return;
@@ -212,6 +216,12 @@ public class SyncFriendsActivity extends AppCompatActivity {
 
 
         if (hours == 0 && minutes == 0) {
+            set_hours_spinner.requestFocus();
+            Toast.makeText(this, "Please enter a valid duration", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (hours == 24 && minutes == 30) {
             set_hours_spinner.requestFocus();
             Toast.makeText(this, "Please enter a valid duration", Toast.LENGTH_SHORT).show();
             return;
