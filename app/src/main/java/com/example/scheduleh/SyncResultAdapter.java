@@ -10,7 +10,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 public class SyncResultAdapter extends RecyclerView.Adapter<SyncResultAdapter.SyncResultViewHolder> {
-    ArrayList<TimeSlot> timeSlotList;
+    private ArrayList<TimeSlot> timeSlotList;
+    private OnTimeSlotItemClickListener listener;
 
     public SyncResultAdapter(ArrayList<TimeSlot> timeSlotList) {
         this.timeSlotList = timeSlotList;
@@ -40,7 +41,7 @@ public class SyncResultAdapter extends RecyclerView.Adapter<SyncResultAdapter.Sy
         return timeSlotList.size();
     }
 
-    public static class SyncResultViewHolder extends RecyclerView.ViewHolder {
+    class SyncResultViewHolder extends RecyclerView.ViewHolder {
         TextView textViewStartTime;
         TextView textViewEndTime;
         TextView textViewDate;
@@ -52,6 +53,27 @@ public class SyncResultAdapter extends RecyclerView.Adapter<SyncResultAdapter.Sy
             textViewEndTime = itemView.findViewById(R.id.event_name);
             textViewDate = itemView.findViewById(R.id.event_end_time);
             textViewFreeBusy = itemView.findViewById(R.id.event_openJio_status);
+
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION && listener != null) {
+                        listener.OnTimeSlotItemClick(position);
+                    }
+                    return true;
+                }
+            });
+
         }
+    }
+
+    public interface OnTimeSlotItemClickListener {
+        // To send any other info to next activity upon click, can add it as a parameter in this method.
+        void OnTimeSlotItemClick(int position);
+    }
+
+    public void setOnTimeSlotItemClickListener(OnTimeSlotItemClickListener listener) {
+        this.listener = listener;
     }
 }

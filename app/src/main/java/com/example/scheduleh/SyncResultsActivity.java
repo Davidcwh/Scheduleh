@@ -135,6 +135,22 @@ public class SyncResultsActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setAdapter(mAdapter);
 
+        ((SyncResultAdapter) mAdapter).setOnTimeSlotItemClickListener(new SyncResultAdapter.OnTimeSlotItemClickListener() {
+            @Override
+            public void OnTimeSlotItemClick(int position) {
+                TimeSlot timeSlot = timeSlots.get(position);
+                Intent intent = new Intent(getApplicationContext(), BusyFreeListActivity.class);
+                intent.putExtra("friends selected", selectedFriends);
+                intent.putExtra("friends busy", timeSlot.getBusyUsers());
+                intent.putExtra("day", timeSlot.getDay());
+                intent.putExtra("month", timeSlot.getMonth());
+                intent.putExtra("year", timeSlot.getYear());
+                intent.putExtra("start time", timeSlot.getStartTime());
+                intent.putExtra("end time", timeSlot.getEndTime());
+                startActivity(intent);
+            }
+        });
+
     }
 
     // Generates all possible available time slots of the given time duration and date

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".BusyFreeListActivity">
+
+    <TextView
+        android:id="@+id/date_textView"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:text="Date"
+        android:background="@color/colorPrimaryDark"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:padding="8dp"/>
+
+    <TextView
+        android:id="@+id/time_textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/date_textView"
+        android:text="Time"
+        android:textAlignment="center"
+        android:background="@color/colorPrimaryDark"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:padding="8dp"/>
+
+    <TextView
+        android:id="@+id/free_textView"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/date_textView"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:background="@color/mti_default_primary_dark"
+        android:text="Free"
+        />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/free_recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="280dp"
+        android:layout_below="@id/free_textView">
+    </android.support.v7.widget.RecyclerView>
+
+    <TextView
+        android:id="@+id/busy_textView"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/free_recyclerView"
+        android:layout_marginTop="8dp"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:background="@color/mti_default_primary_dark"
+        android:text="Busy"
+        />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/busy_recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="278dp"
+        android:layout_below="@id/busy_textView">
+    </android.support.v7.widget.RecyclerView>
+
+</RelativeLayout>
