@@ -190,6 +190,7 @@ public class OpenjioFragment extends Fragment implements View.OnClickListener{
                     jioInfo.put("day", event.get("day"));
                     jioInfo.put("userId", event.get("userId"));
                     jioInfo.put("displayName", event.get("displayName"));
+                    jioInfo.put("priority", event.get("priority"));
 
                     // Adding event to user's "user jios" collection
                     db.collection("users").document(mAuth.getCurrentUser().getUid())

@@ -205,6 +205,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                     jioInfo.put("year", event.get("year"));
                     jioInfo.put("month", event.get("month"));
                     jioInfo.put("day", event.get("day"));
+                    jioInfo.put("userId", mAuth.getCurrentUser().getUid());
+                    jioInfo.put("displayName", mAuth.getCurrentUser().getDisplayName());
                     jioInfo.put("priority", event.get("priority"));
 
                     // Adding event to user's "user jios" collection
@@ -212,11 +214,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                             .collection("user jios")
                             .document(event.getId())
                             .set(jioInfo);
-
-                    // Now add the user's id and display name to the set of info
-                    // This is because the event will now be added to all friends' "friend jios"
-                    jioInfo.put("userId", mAuth.getCurrentUser().getUid());
-                    jioInfo.put("displayName", mAuth.getCurrentUser().getDisplayName());
 
                     // reference to collection of user's friends
                     CollectionReference allFriends = db.collection("users").document(mAuth.getCurrentUser().getUid())
