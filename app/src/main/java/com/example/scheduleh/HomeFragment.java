@@ -12,14 +12,17 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -39,6 +42,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference dayEventsRef;
     private EventAdapter adapter;
+    private ImageView imageView;
     int currentYear, currentMonth, currentDay;
 
     @Nullable
@@ -52,9 +56,21 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         super.onViewCreated(view, savedInstanceState);
 
         // Initialising click listeners for the settings and friends image views (since they are not buttons)
+        imageView = getView().findViewById(R.id.homeUserProfilePhoto);
         getView().findViewById(R.id.homeSettings).setOnClickListener(this);
         getView().findViewById(R.id.homeFriends).setOnClickListener(this);
 
+
+        FirebaseUser user = mAuth.getCurrentUser();
+        if(user != null) {
+            //retrieve profile picture
+            if (user.getPhotoUrl() != null) {
+                //if not null, we will add the photo to the imageview of the profile screen
+                Glide.with(this)
+                        .load(user.getPhotoUrl().toString())
+                        .into(imageView);
+            }
+        } //Display profile pic
         userDisplayName = getView().findViewById(R.id.homeUserDisplayName); // Initialise textView to display name
         userDisplayName.setText(mAuth.getCurrentUser().getDisplayName()); // Set user display name to textView
 

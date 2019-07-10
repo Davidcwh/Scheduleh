@@ -32,8 +32,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             case "edit_profile":
                 editProfile();
                 break;
-            case "edit_email":
-                break;
             case "edit_password":
                 changePassword();
                 break;
@@ -73,30 +71,9 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     }
 
     private void editProfile() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
-
-        builder.setTitle("Confirm");
-        builder.setMessage("Do you want to edit your profile?");
-
-        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-
-            public void onClick(DialogInterface dialog, int which) {
-                getActivity().finish();
-                Intent intent = new Intent(getActivity(), EditProfileActivity.class);
-                startActivity(intent);
-                dialog.dismiss();
-            }
-        });
-        builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // Do nothing
-                dialog.dismiss();
-            }
-        });
-        AlertDialog alert = builder.create();
-        alert.show();
+        getActivity().finish();
+        Intent intent = new Intent(getActivity(), EditProfileActivity.class);
+        startActivity(intent);
     }
 
     private void changePassword() {

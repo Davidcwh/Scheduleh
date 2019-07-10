@@ -18,9 +18,6 @@
         android:key="edit_profile"
         android:title="Edit Profile"
         android:summary="Change profile picture and username"></Preference>
-    <Preference
-        android:key="edit_email"
-        android:title="Change Email"></Preference>
     <PreferenceCategory
         android:title="Privacy setting">
         <Preference

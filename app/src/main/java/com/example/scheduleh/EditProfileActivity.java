@@ -1,6 +1,8 @@
 package com.example.scheduleh;
 
 import android.app.ActionBar;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -84,24 +86,47 @@ public class EditProfileActivity extends AppCompatActivity {
         findViewById(R.id.updateButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateUser();
-                getData();
-//                cancelButton();
+                Confirm();
             }
         });
 
         findViewById(R.id.cancelButton).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                cancelButton();
+            public void onClick(View v) { cancelButton();
             }
         });
     }
 
-    public void cancelButton () {
+    private void cancelButton () {
         Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    private void Confirm(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle("Confirm");
+        builder.setMessage("Do you want to edit your profile?");
+
+        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int which) {
+                updateUserCheck();
+                getData();
+                dialog.dismiss();
+            }
+        });
+        builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Do nothing
+                dialog.dismiss();
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
     //working on the back button
@@ -142,7 +167,7 @@ public class EditProfileActivity extends AppCompatActivity {
         }
     }
 
-    private void updateUser() {
+    private void updateUserCheck() {
         FirebaseUser user;
         user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -162,7 +187,7 @@ public class EditProfileActivity extends AppCompatActivity {
         if(user != null){
             UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                     .setDisplayName(textUsername.getText().toString())
-//                    .setPhotoUri(Uri.parse(profileImageURL))
+                    .setPhotoUri(Uri.parse(profileImageURL))
                     .build();
 
             user.updateProfile(profileUpdates)

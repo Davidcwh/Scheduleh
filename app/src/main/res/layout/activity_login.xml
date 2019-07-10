@@ -70,5 +70,14 @@
             android:gravity="center"
             android:textSize="16dip"/>
 
+        <TextView android:id="@+id/forgetPassword"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:text="Forget your password? Click here to reset"
+            android:fontFamily="sans-serif-condensed"
+            android:gravity="center"
+            android:textSize="16dip"/>
+
     </LinearLayout>
 </ScrollView>
