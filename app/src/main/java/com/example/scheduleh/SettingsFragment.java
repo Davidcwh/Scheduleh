@@ -16,6 +16,10 @@ import android.widget.TextView;
 import android.app.AlertDialog;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
 
@@ -51,6 +55,12 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
 
             public void onClick(DialogInterface dialog, int which) {
+                FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                Map<String, Object> removeTokenId = new HashMap<>();
+                removeTokenId.put("tokenId", "");
+                db.collection("users").document(mAuth.getCurrentUser().getUid()).update(removeTokenId);
+
                 FirebaseAuth.getInstance().signOut();
                 getActivity().finish();
                 Intent intent = new Intent(getActivity(), LoginActivity.class);

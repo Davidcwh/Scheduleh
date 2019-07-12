@@ -38,7 +38,7 @@ import java.util.Map;
 public class HomeFragment extends Fragment implements View.OnClickListener {
 
     private TextView userDisplayName, displayCurrentDate;
-    private FirebaseAuth mAuth = FirebaseAuth.getInstance();;
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference dayEventsRef;
     private EventAdapter adapter;
@@ -57,6 +57,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         // Initialising click listeners for the settings and friends image views (since they are not buttons)
         imageView = getView().findViewById(R.id.homeUserProfilePhoto);
+        getView().findViewById(R.id.notificationsBell).setOnClickListener(this);
         getView().findViewById(R.id.homeSettings).setOnClickListener(this);
         getView().findViewById(R.id.homeFriends).setOnClickListener(this);
 
@@ -98,6 +99,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
             case R.id.homeFriends:
                 startActivity(new Intent(getActivity(), FriendsActivity.class));
+                break;
+
+            case R.id.notificationsBell:
+                startActivity(new Intent(getActivity(), NotificationsActivity.class));
                 break;
         }
     }

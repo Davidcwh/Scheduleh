@@ -20,7 +20,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
@@ -30,6 +35,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     EditText LogInEmail, LogInPassword;
 
     private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +43,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_login);
 
         mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
 
         LogInEmail = findViewById(R.id.LogInEmailEditText);
         LogInPassword = findViewById(R.id.LogInPasswordEditText);
@@ -77,6 +84,21 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
+
+                    // Adding token id for push notifications
+                    FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                            if (task.isSuccessful()) {
+                                String tokenId = task.getResult().getToken();
+                                Map<String, Object> tokenMap = new HashMap<>();
+                                tokenMap.put("tokenId", tokenId);
+
+                                db.collection("users").document(mAuth.getCurrentUser().getUid()).update(tokenMap);
+                            }
+                        }
+                    });
+
                     finish();
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

@@ -153,6 +153,13 @@ public class EventAdapter extends FirestoreRecyclerAdapter<Event, EventAdapter.E
                                         }
                                     });
 
+                                    // sending notification
+                                    String message = currentUser.getDisplayName() + " has left your OpenJio event: "
+                                            + eventSnapshot.get("eventName").toString();
+                                    Notification notification = new Notification(message, currentUser.getUid(), "leaveOpenJio");
+                                    db.collection("users").document(eventSnapshot.get("userId").toString())
+                                            .collection("notifications").add(notification);
+
                                     Toast.makeText(context, "Left jio!", Toast.LENGTH_SHORT).show();
                                     return true;
 

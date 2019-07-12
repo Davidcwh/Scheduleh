@@ -128,6 +128,12 @@ public class FriendRequestAdapter extends FirestoreRecyclerAdapter<User, FriendR
                         }
                     });
 
+            // sending notification
+            String message = mAuth.getCurrentUser().getDisplayName() + " and you are now friends";
+            Notification notification = new Notification(message, mAuth.getCurrentUser().getUid(), "acceptFriendRequest");
+            db.collection("users").document(documentSnapshot.getId())
+                    .collection("notifications").add(notification);
+
             Log.i(getClass().getName(), documentSnapshot.get("displayName") + " added to friends list");
         }
 

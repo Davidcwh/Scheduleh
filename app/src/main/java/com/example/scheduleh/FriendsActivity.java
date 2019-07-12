@@ -124,6 +124,13 @@ public class FriendsActivity extends AppCompatActivity implements View.OnClickLi
                                                                                         .collection("friend requests")
                                                                                         .document(mAuth.getCurrentUser().getUid())
                                                                                         .set(map);
+
+                                                                                // sending notification
+                                                                                String message = mAuth.getCurrentUser().getDisplayName() + " wants to be your friend";
+                                                                                Notification notification = new Notification(message, mAuth.getCurrentUser().getUid(), "sendFriendRequest");
+                                                                                db.collection("users").document(documentSnapshot.getId())
+                                                                                        .collection("notifications").add(notification);
+
                                                                                 Toast.makeText(FriendsActivity.this, "Friend Request sent", Toast.LENGTH_SHORT).show();
                                                                             } else { // else, there is already a pending friend request, so a duplicate is not send
                                                                                 Toast.makeText(FriendsActivity.this, "Friend request still pending", Toast.LENGTH_SHORT).show();

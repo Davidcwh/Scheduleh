@@ -10,6 +10,7 @@
     <string name="delete">delete</string>
     <string name="pending_friend_requests">Pending Friend Requests</string>
     <string name="add_myJios">Add to MyJios</string>
+    <string name="default_notification_channel_id">Notif_CH_01</string>
 
     <string-array name="priority_array">
         <item>Low</item>

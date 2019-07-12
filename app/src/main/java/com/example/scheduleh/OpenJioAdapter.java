@@ -91,7 +91,15 @@ public class OpenJioAdapter extends FirestoreRecyclerAdapter<Event, OpenJioAdapt
                             .collection("friends joined").document(currentUser.getUid())
                             .set(userInfo);
 
+                    // sending notification
+                    String message = mAuth.getCurrentUser().getDisplayName() + " has joined your OpenJio event: "
+                            + documentSnapshot.get("eventName").toString();
+                    Notification notification = new Notification(message, currentUser.getUid(), "joinOpenJio");
+                    db.collection("users").document(documentSnapshot.get("userId").toString())
+                            .collection("notifications").add(notification);
+
                     documentSnapshot.getReference().delete();
+
                 }
             });
         }

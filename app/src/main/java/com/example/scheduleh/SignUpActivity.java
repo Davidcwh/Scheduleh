@@ -18,6 +18,11 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -92,6 +97,20 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
                     db.collection("users").document(user.getUid()).set(user);
                     db.collection("users").document(user.getUid()).update("displayName", displayName);
+
+                    // Adding token id for push notifications
+                    FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                            if (task.isSuccessful()) {
+                                String tokenId = task.getResult().getToken();
+                                Map<String, Object> tokenMap = new HashMap<>();
+                                tokenMap.put("tokenId", tokenId);
+
+                                db.collection("users").document(mAuth.getCurrentUser().getUid()).update(tokenMap);
+                            }
+                        }
+                    });
 
                     finish();
                     Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
