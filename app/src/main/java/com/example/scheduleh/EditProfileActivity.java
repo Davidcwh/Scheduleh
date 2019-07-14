@@ -113,7 +113,6 @@ public class EditProfileActivity extends AppCompatActivity {
 
             public void onClick(DialogInterface dialog, int which) {
                 updateUserCheck();
-                getData();
                 dialog.dismiss();
             }
         });
@@ -168,8 +167,6 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     private void updateUserCheck() {
-        FirebaseUser user;
-        user = FirebaseAuth.getInstance().getCurrentUser();
 
         String displayName = textUsername.getText().toString();
 
@@ -183,154 +180,142 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     private void updateUsername(){
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if(user != null){
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user != null) {
             UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                     .setDisplayName(textUsername.getText().toString())
-                    .setPhotoUri(Uri.parse(profileImageURL))
+//                    .setPhotoUri(Uri.parse(profileImageURL))
                     .build();
 
+            //update in users
+            db.collection("users").document(user.getUid()).update("displayName", textUsername.getText().toString());
+
+            //Update in events
+            db.collection("users").document(user.getUid()).collection("events").get()
+                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            if (!queryDocumentSnapshots.isEmpty()) {
+                                for (final DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                    if (documentSnapshot.getString("userId").equals(user.getUid())) {
+                                        db.collection("users").document(user.getUid())
+                                                .collection("events").document(documentSnapshot.getId())
+                                                .update("displayName", textUsername.getText().toString());
+                                    }
+                                }
+                            }
+                        }
+                    });
+
+            //Check user jios and the events of friends who are going
+            db.collection("users").document(user.getUid()).collection("user jios").get()
+                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            if (!queryDocumentSnapshots.isEmpty()) {
+                                for (final DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                    db.collection("users").document(user.getUid())
+                                            .collection("user jios").document(documentSnapshot.getId())
+                                            .update("displayName", textUsername.getText().toString());
+
+                                    //update the events in friends that joined
+                                    db.collection("users").document(user.getUid())
+                                            .collection("user jios").document(documentSnapshot.getId())
+                                            .collection("friends joined")
+                                            .get()
+                                            .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                                @Override
+                                                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                                    if (!queryDocumentSnapshots.isEmpty()) {
+                                                        //for each friend in the user jio
+                                                        for (final DocumentSnapshot documentSnapshotJoin : queryDocumentSnapshots) {
+                                                            db.collection("users").document(documentSnapshotJoin.getId())
+                                                                    .collection("events").document(documentSnapshot.getId())
+                                                                    .update("displayName", textUsername.getText().toString());
+                                                        }
+                                                    }
+                                                }
+                                            });
+                                }
+                            }
+                        }
+                    });
+
+            //Update in friend's list
+            db.collection("users").document(user.getUid()).collection("friend list").get()
+                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            if (!queryDocumentSnapshots.isEmpty()) {
+                                for (final DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                    db.collection("users").document(documentSnapshot.getId())
+                                            .collection("friend list").document(user.getUid())
+                                            .update("displayName", textUsername.getText().toString());
+
+                                    //from the friends list check the friends jio
+                                    db.collection("users").document(documentSnapshot.getId())
+                                            .collection("friend jios").get()
+                                            .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                                @Override
+                                                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                                    //update in friends jio
+                                                    if (!queryDocumentSnapshots.isEmpty()) {
+                                                        for (final DocumentSnapshot documentSnapshotJio : queryDocumentSnapshots) {
+                                                            if (documentSnapshotJio.getString("userId").equals(user.getUid())) {
+                                                                db.collection("users").document(documentSnapshot.getId())
+                                                                        .collection("friend jios").document(documentSnapshotJio.getId())
+                                                                        .update("displayName", textUsername.getText().toString());
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            });
+                                }
+                            }
+                        }
+                    });
+
+            //friends requests if have
+            db.collection("users").get()
+                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            if (!queryDocumentSnapshots.isEmpty()) {
+                                for (final DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                    db.collection("users").document(documentSnapshot.getId()).collection("friend requests").get()
+                                            .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                                @Override
+                                                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                                    if (!queryDocumentSnapshots.isEmpty()) {
+                                                        for (final DocumentSnapshot documentSnapshotRequest : queryDocumentSnapshots) {
+                                                            if (documentSnapshotRequest.getString("id").equals(user.getUid())) {
+                                                                db.collection("users").document(documentSnapshot.getId())
+                                                                        .collection("friend requests").document(documentSnapshotRequest.getId())
+                                                                        .update("displayName", textUsername.getText().toString());
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            });
+                                }
+                            }
+                        }
+                    });
             user.updateProfile(profileUpdates)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
-                            if(task.isSuccessful()){
+                            if (task.isSuccessful()) {
                                 Toast.makeText(EditProfileActivity.this, "Profile updated", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
+/*            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            finish();
+            startActivity(intent);*/
+            cancelButton();
         }
-        //update in users
-        db.collection("users").document(user.getUid()).update("displayName", textUsername.getText().toString());
-        /* TODO: Add the change to all profiles as well */
-        /*
-        //update in all collections
-        db.collection("users")
-                .whereEqualTo("displayName", textUsername.getText().toString())
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
-
-                    }
-                });*/
-
-    }
-
-    //getdata and update data are tgt and diff from the top few update function
-    private void getData() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        db.collection("users").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    ArrayList<String> list = new ArrayList<>();
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        list.add(document.getId());
-                    }
-                    Log.d(TAG, list.toString());
-                    updateData(list); // *** new ***
-                } else {
-                    Log.d(TAG, "Error getting documents: ", task.getException());
-                }
-            }
-        });
-
-    }
-
-    private void updateData(ArrayList list) {
-
-        // Get a new write batch
-        final WriteBatch batch = db.batch();
-        final FirebaseUser user;
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        final String email = user.getEmail();
-
-        // Iterate through the list
-        for (int k = 0; k < list.size(); k++) {
-
-            // Update each list item
-            final DocumentReference ref = db.collection("users").document((String) list.get(k));
-            db.runTransaction(new Transaction.Function<Object>() {
-
-                @Nullable
-                @Override
-                public Object apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
-                    DocumentSnapshot snapshot = transaction.get(ref);
-
-                    //For each document
-                    //This if changes all the displayName for the main user
-                    if(snapshot.getString("email") == email) {
-
-                        //checks events collection
-                        db.collection("users").document(user.getUid()).collection("events").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    ArrayList<String> UserEventList = new ArrayList<>();
-                                    for (QueryDocumentSnapshot document : task.getResult()) {
-                                        UserEventList.add(document.getId());
-                                    }
-
-                                    Log.d(TAG, UserEventList.toString());
-
-                                    for(int i = 0; i < UserEventList.size(); i++) {
-                                        final DocumentReference UserEventRef = db.collection("users").document(user.getUid()).collection("events").document(UserEventList.get(i));
-                                        db.runTransaction(new Transaction.Function<Object>() {
-                                            @Nullable
-                                            @Override
-                                            public Object apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
-                                                DocumentSnapshot snapshot = transaction.get(UserEventRef);
-                                                if(snapshot.getString("UserId").equals(user.getUid())){
-                                                    batch.update(UserEventRef, "displayName", textUsername.getText().toString());
-                                                }
-                                                return null;
-                                            }
-                                        });
-                                    }
-                                } else {
-                                    Log.d(TAG, "Error getting documents: ", task.getException());
-                                }
-                            }
-                        });
-
-                        //checks user jios
-                        db.collection("users").document(user.getUid()).collection("user jios").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    ArrayList<String> UserJioList = new ArrayList<>();
-                                    for (QueryDocumentSnapshot document : task.getResult()) {
-                                        UserJioList.add(document.getId());
-                                    }
-
-                                    Log.d(TAG, UserJioList.toString());
-
-                                    for(int i = 0; i < UserJioList.size(); i++) {
-                                        DocumentReference UserJioRef = db.collection("users").document(user.getUid()).collection("user jios").document(UserJioList.get(i));
-                                        batch.update(UserJioRef, "displayName", textUsername.getText().toString());
-                                    }
-                                } else {
-                                    Log.d(TAG, "Error getting documents: ", task.getException());
-                                }
-                            }
-                        });
-                    }
-                    return null;
-                }
-            });
-
-//            batch.update(ref, "displayName", textUsername.getText().toString());
-
-        }
-
-        // Commit the batch
-        batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                // Yay its all done in one go!
-            }
-        });
-
     }
 
     //we need to get the image from choose image, and to do this we need to override a method called onactivityresult

@@ -89,7 +89,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             public void onComplete(@NonNull Task<AuthResult> task) {
                 progressBar.setVisibility(View.GONE);
                 if (task.isSuccessful()) {
-                    Toast.makeText(getApplicationContext(), "User Registration Successful! Logging you in...", Toast.LENGTH_SHORT).show();
 
                     FirebaseUser user = mAuth.getCurrentUser();
                     UserProfileChangeRequest updateProfile = new UserProfileChangeRequest.Builder().setDisplayName(displayName).build();
@@ -97,28 +96,19 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
                     db.collection("users").document(user.getUid()).set(user);
                     db.collection("users").document(user.getUid()).update("displayName", displayName);
-
-                    // Adding token id for push notifications
-                    FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                    user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
-                        public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                            if (task.isSuccessful()) {
-                                String tokenId = task.getResult().getToken();
-                                Map<String, Object> tokenMap = new HashMap<>();
-                                tokenMap.put("tokenId", tokenId);
-
-                                db.collection("users").document(mAuth.getCurrentUser().getUid()).update(tokenMap);
-                            }
+                        public void onComplete(@NonNull Task<Void> task) {
+                            Toast.makeText(getApplicationContext(), "Email Verification has been sent.", Toast.LENGTH_LONG).show();
+                            finish();
+                            Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
                         }
                     });
 
-                    finish();
-                    Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-
                 } else if (task.getException() instanceof FirebaseAuthUserCollisionException){
-                    Toast.makeText(getApplicationContext(), "Registration failed: email already registered", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Registration failed: email already used", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                 }

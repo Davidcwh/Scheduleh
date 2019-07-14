@@ -143,14 +143,6 @@
                     android:layout_marginBottom="-9dp"
                     android:text="Tap image to change picture" />
 
-                <android.support.design.widget.FloatingActionButton
-                    android:id="@+id/floatingActionButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignEnd="@+id/imageview_account_profile"
-                    android:layout_alignParentTop="true"
-                    android:layout_marginTop="10dp" />
-
             </RelativeLayout>
 
 

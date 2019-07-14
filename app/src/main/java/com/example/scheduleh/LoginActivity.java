@@ -16,11 +16,14 @@ import android.widget.Toast;
 import android.app.AlertDialog;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 
@@ -84,25 +87,58 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
+                    final FirebaseUser user = mAuth.getCurrentUser();
+                    if(!user.isEmailVerified()){
+//                        Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_LONG).show();
 
-                    // Adding token id for push notifications
-                    FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                            if (task.isSuccessful()) {
-                                String tokenId = task.getResult().getToken();
-                                Map<String, Object> tokenMap = new HashMap<>();
-                                tokenMap.put("tokenId", tokenId);
+                        AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
 
-                                db.collection("users").document(mAuth.getCurrentUser().getUid()).update(tokenMap);
+                        builder.setTitle("Email Verification");
+                        builder.setMessage("Please verify your email.");
+                        builder.setPositiveButton("Resend verification", new DialogInterface.OnClickListener() {
+
+                            public void onClick(DialogInterface dialog, int which) {
+                                user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        Toast.makeText(getApplicationContext(), "Email Verification has been sent.", Toast.LENGTH_LONG).show();
+                                        FirebaseAuth.getInstance().signOut();
+                                    }
+                                });
+                                dialog.dismiss();
                             }
-                        }
-                    });
+                        });
+                        builder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
 
-                    finish();
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // Do nothing
+                                dialog.dismiss();
+                            }
+                        });
+                        AlertDialog alert = builder.create();
+                        alert.show();
+
+                    }
+                    else {
+                        // Adding token id for push notifications
+                        FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                                if (task.isSuccessful()) {
+                                    String tokenId = task.getResult().getToken();
+                                    Map<String, Object> tokenMap = new HashMap<>();
+                                    tokenMap.put("tokenId", tokenId);
+
+                                    db.collection("users").document(mAuth.getCurrentUser().getUid()).update(tokenMap);
+                                }
+                            }
+                        });
+                        finish();
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                    }
 
                 } else {
                     Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
@@ -154,7 +190,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onStart() {
         super.onStart();
 
-        if (mAuth.getCurrentUser() != null) {
+        if (mAuth.getCurrentUser() != null && mAuth.getCurrentUser().isEmailVerified()) {
             finish();
             startActivity(new Intent(this, MainActivity.class));
         }
