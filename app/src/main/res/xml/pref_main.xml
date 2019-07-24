@@ -6,13 +6,6 @@
     android:key="first_preferencescreen">
     <PreferenceCategory
         android:title="General">
-        <android.support.v7.preference.SwitchPreferenceCompat
-            android:defaultValue="false"
-            android:key="theme_switch"
-            android:summary="Turn on for light theme"
-            android:title="Theme">
-
-        </android.support.v7.preference.SwitchPreferenceCompat>
     </PreferenceCategory>
     <Preference
         android:key="edit_profile"
