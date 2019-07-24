@@ -38,8 +38,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
                     android:layout_marginTop="100dp"
+                    android:layout_marginRight="10dp"
                     android:orientation="vertical">
 
                     <TextView
@@ -53,7 +53,7 @@
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColorHint="@color/colorPrimary"/>
+                        android:textColorHint="@color/colorPrimary" />
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
@@ -64,8 +64,8 @@
                             android:id="@+id/newUsername"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="Please input username"
                             android:layout_marginTop="40dp"
+                            android:hint="Please input username"
                             android:imeOptions="actionNext"
                             android:inputType="textPersonName"
                             android:textColorHint="@color/colorPrimary" />
@@ -76,12 +76,12 @@
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColorHint="@color/colorPrimary"/>
+                        android:textColorHint="@color/colorPrimary" />
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColorHint="@color/colorPrimary"/>
+                        android:textColorHint="@color/colorPrimary" />
 
 
                     <View
@@ -94,8 +94,8 @@
                     android:id="@+id/updateButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/colorPrimary"
                     android:layout_marginTop="20dp"
+                    android:background="@color/colorPrimary"
                     android:text="Update"
                     android:textColor="@android:color/white" />
 
@@ -125,7 +125,7 @@
                     android:layout_marginStart="128dp"
                     android:layout_marginTop="24dp"
                     android:layout_marginEnd="133dp"
-                    android:src="@mipmap/ic_launcher"
+                    android:src="@drawable/ic_home_default_profile_pic"
                     app:civ_border_color="#FFFFFF"
                     app:civ_border_width="2dp" />
 
@@ -150,9 +150,9 @@
     </ScrollView>
 
     <ProgressBar
-        android:visibility="gone"
         android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyle"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -160,10 +160,9 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_marginStart="181dp"
-        android:layout_marginTop="560dp"
+        android:layout_marginTop="240dp"
         android:layout_marginEnd="182dp"
-        android:layout_marginBottom="123dp" />
-
+        android:layout_marginBottom="475dp" />
 
 
 </RelativeLayout>

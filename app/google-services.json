@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "639768018676-4n069fmb00b9r65tlr0d8q7aal0t1qhg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.scheduleh",
+            "certificate_hash": "9f101a0d931be49ccf8f851afd7e80b8ba4eebce"
+          }
+        },
+        {
           "client_id": "639768018676-qs3escf60sormh23gj7oh5k4adlhjd8f.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

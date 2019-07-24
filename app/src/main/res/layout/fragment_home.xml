@@ -13,15 +13,13 @@
         android:elevation="4dp"
         android:paddingBottom="12dp">
 
-        <ImageButton
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/homeUserProfilePhoto"
             android:layout_width="120dp"
-            android:layout_height="120dp"
+            android:layout_height="125dp"
             android:layout_marginTop="50dp"
             android:layout_centerHorizontal="true"
-            android:background="@drawable/profile_circular_border"
             android:elevation="5dp"
-            android:padding="20dp"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_home_default_profile_pic" />
 
