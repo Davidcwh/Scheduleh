@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -16,6 +17,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -24,7 +26,10 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class FriendRequestAdapter extends FirestoreRecyclerAdapter<User, FriendRequestAdapter.FriendRequestHolder> {
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     public FriendRequestAdapter(@NonNull FirestoreRecyclerOptions<User> options) {
         super(options);
@@ -33,6 +38,27 @@ public class FriendRequestAdapter extends FirestoreRecyclerAdapter<User, FriendR
     @Override
     protected void onBindViewHolder(@NonNull final FriendRequestHolder holder, int position, @NonNull final User model) {
         holder.userDisplayNameTextView.setText(model.getDisplayName());
+        DocumentReference Ref = db.collection("users").document(model.getId());
+        Ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> taskPhoto) {
+                if(taskPhoto.isSuccessful()){
+                    DocumentSnapshot Document = taskPhoto.getResult();
+                    if(Document.exists()){
+
+                        if (Document.getString("photoUrl") != null) {
+                            //if not null, we will add the photo to the imageview of the profile screen
+                            Glide.with(holder.friendProfilePic.getContext())
+                                    .load(Document.getString("photoUrl"))
+                                    .into(holder.friendProfilePic);
+                        } else {
+                            holder.friendProfilePic.setImageResource(R.drawable.ic_home_default_profile_pic);
+                        }
+
+                    }
+                }
+            }
+        });
 
     }
 
@@ -45,6 +71,7 @@ public class FriendRequestAdapter extends FirestoreRecyclerAdapter<User, FriendR
 
     class FriendRequestHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         TextView userDisplayNameTextView, confirmTextView, deleteTextView;
+        CircleImageView friendProfilePic;
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
@@ -53,6 +80,7 @@ public class FriendRequestAdapter extends FirestoreRecyclerAdapter<User, FriendR
             userDisplayNameTextView = itemView.findViewById(R.id.friendRequestItem_displayName_textView);
             confirmTextView = itemView.findViewById(R.id.friendRequestItem_confirm_textView);
             deleteTextView = itemView.findViewById(R.id.friendRequestItem_delete_textView);
+            friendProfilePic = itemView.findViewById(R.id.friendRequestItem_profilePhoto_imageButton);
 
             confirmTextView.setOnClickListener(this);
             deleteTextView.setOnClickListener(this);

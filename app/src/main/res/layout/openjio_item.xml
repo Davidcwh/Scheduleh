@@ -74,11 +74,10 @@
         android:layout_marginTop="100dp"
         android:background="#696969">
 
-        <ImageButton
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/openJioItem_profilePhoto_imageButton"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:background="@drawable/profile_circular_border"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:elevation="5dp"
             android:padding="12dp"
             android:scaleType="centerCrop"

@@ -9,24 +9,31 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class OpenJioAdapter extends FirestoreRecyclerAdapter<Event, OpenJioAdapter.OpenJioHolder> {
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     public OpenJioAdapter(@NonNull FirestoreRecyclerOptions<Event> options) {
         super(options);
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull OpenJioHolder holder, int position, @NonNull Event model) {
+    protected void onBindViewHolder(@NonNull final OpenJioHolder holder, int position, @NonNull Event model) {
         holder.textViewStartTime.setText(model.getStartTime());
         holder.textViewEndTime.setText(model.getEndTime());
         holder.textViewEventName.setText(model.getEventName());
@@ -42,6 +49,28 @@ public class OpenJioAdapter extends FirestoreRecyclerAdapter<Event, OpenJioAdapt
             holder.textViewPriority.setText("High Priority");
             holder.textViewPriority.setTextColor(Color.parseColor("#d11a2a"));
         }
+
+        DocumentReference Ref = db.collection("users").document(model.getUserId());
+        Ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> taskPhoto) {
+                if(taskPhoto.isSuccessful()){
+                    DocumentSnapshot Document = taskPhoto.getResult();
+                    if(Document.exists()){
+
+                        if (Document.getString("photoUrl") != null) {
+                            //if not null, we will add the photo to the imageview of the profile screen
+                            Glide.with(holder.userProfilePic.getContext())
+                                    .load(Document.getString("photoUrl"))
+                                    .into(holder.userProfilePic);
+                        } else {
+                            holder.userProfilePic.setImageResource(R.drawable.ic_home_default_profile_pic);
+                        }
+
+                    }
+                }
+            }
+        });
     }
 
     @NonNull
@@ -61,6 +90,7 @@ public class OpenJioAdapter extends FirestoreRecyclerAdapter<Event, OpenJioAdapt
         TextView textViewDisplayName;
         TextView textViewPriority;
         Button buttonJoinJio;
+        CircleImageView userProfilePic;
 
         public OpenJioHolder(@NonNull View itemView) {
             super(itemView);
@@ -71,6 +101,7 @@ public class OpenJioAdapter extends FirestoreRecyclerAdapter<Event, OpenJioAdapt
             textViewDisplayName = itemView.findViewById(R.id.openJioItem_displayName_textView);
             textViewPriority = itemView.findViewById(R.id.openJio_priority);
             buttonJoinJio = itemView.findViewById(R.id.openJio_joinJio_button);
+            userProfilePic = itemView.findViewById(R.id.openJioItem_profilePhoto_imageButton);
 
             buttonJoinJio.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -84,7 +115,7 @@ public class OpenJioAdapter extends FirestoreRecyclerAdapter<Event, OpenJioAdapt
                             .set(eventData);
 
                     Map<String, Object> userInfo = new HashMap<>();
-                    userInfo.put("userId", currentUser.getUid());
+                    userInfo.put("id", currentUser.getUid());
                     userInfo.put("displayName", currentUser.getDisplayName());
                     db.collection("users").document(documentSnapshot.get("userId").toString())
                             .collection("user jios").document(documentSnapshot.getId())

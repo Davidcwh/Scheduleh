@@ -8,12 +8,16 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class BusyFreeAdapter extends RecyclerView.Adapter<BusyFreeAdapter.BusyFreeViewHolder> {
     private ArrayList<String> usersList;
@@ -44,6 +48,28 @@ public class BusyFreeAdapter extends RecyclerView.Adapter<BusyFreeAdapter.BusyFr
             }
         });
 
+        DocumentReference Ref = db.collection("users").document(userId);
+        Ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> taskPhoto) {
+                if(taskPhoto.isSuccessful()){
+                    DocumentSnapshot Document = taskPhoto.getResult();
+                    if(Document.exists()){
+
+                        if (Document.getString("photoUrl") != null) {
+                            //if not null, we will add the photo to the imageview of the profile screen
+                            Glide.with(busyFreeViewHolder.friendProfilePic.getContext())
+                                    .load(Document.getString("photoUrl"))
+                                    .into(busyFreeViewHolder.friendProfilePic);
+                        } else {
+                            busyFreeViewHolder.friendProfilePic.setImageResource(R.drawable.ic_home_default_profile_pic);
+                        }
+
+                    }
+                }
+            }
+        });
+
     }
 
     @Override
@@ -54,7 +80,7 @@ public class BusyFreeAdapter extends RecyclerView.Adapter<BusyFreeAdapter.BusyFr
     class BusyFreeViewHolder extends RecyclerView.ViewHolder {
 
         TextView userDisplayNameTextView;
-        ImageButton friendProfilePic;
+        CircleImageView friendProfilePic;
 
         public BusyFreeViewHolder(@NonNull View itemView) {
             super(itemView);
