@@ -155,9 +155,6 @@ public class EditProfileActivity extends AppCompatActivity {
                     }
                 });*/
             }
-            else{
-                Toast.makeText(EditProfileActivity.this, "Error", Toast.LENGTH_SHORT).show();
-            }
             //retrieve original name
             if (user.getDisplayName() != null) {
                 oldUsername = user.getDisplayName();

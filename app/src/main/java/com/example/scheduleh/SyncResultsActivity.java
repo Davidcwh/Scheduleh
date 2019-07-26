@@ -100,7 +100,8 @@ public class SyncResultsActivity extends AppCompatActivity {
 
                                 // iterate thru all timeslots for the date and check if the user's event overlaps with it, means this user is busy for that slot
                                 for (TimeSlot timeSlot: timeSlots) {
-                                    if (overlapTimings(currentEvent.getStartTime(), currentEvent.getEndTime(), timeSlot.getStartTime(), timeSlot.getEndTime())){
+                                    if (overlapTimings(currentEvent.getStartTime(), currentEvent.getEndTime(), timeSlot.getStartTime(), timeSlot.getEndTime()) &&
+                                    timeSlot.getYear() == currentEvent.getYear() && timeSlot.getMonth() == currentEvent.getMonth() && timeSlot.getDay() == currentEvent.getDay()){
                                         timeSlot.setPriority(timeSlot.getPriority() + currentEvent.getPriority()); // increase priority for timeslot
 
                                         if (!timeSlot.containsBusyUser(currentEvent.getUserId())) {
