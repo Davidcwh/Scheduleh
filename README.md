@@ -9,7 +9,7 @@ Group members:
 * [Chia Wei Hao, David](https://github.com/Davidcwh)
 * [Lim Jun Kuang, Lionel](https://github.com/lionlim97)
 
-Proposed Level of Achievement: Apollo 11
+Proposed Level of Achievement: **Apollo 11**
 
 [Watch how Scheduleh works in a video](https://youtu.be/JKkEzxQJGJs)
 
@@ -18,8 +18,6 @@ Proposed Level of Achievement: Apollo 11
 [Milestone 2 README](https://docs.google.com/document/d/1guSXiYlIAyE2DObrG25iAU72XaYBo3ywZDIV3opREJs/edit?usp=sharing)
 
 [Milestone 3 README](https://docs.google.com/document/d/1XaD-jkOmDCYLBXLr7w-DypuZMqs2a_N4ZnNnVluCt28/edit?usp=sharing)
-
-
 
 
 ![](https://i.ibb.co/ZzxXBKz/readme-Title.png)
@@ -63,7 +61,11 @@ Likewise, the user will be able to view a feed of posted invitations (“jios”
 * [Firebase](https://firebase.google.com/)
 
 ## Acknowledgements
-
+This project was made possible with these add-ons:
+* [Shrikanth Ravi's Collapsible Calendar View](http://shrikanthravi.me/Collapsible-Calendar-View-Android/)
+* [mahimrocky's WeekDay Selector](https://github.com/mahimrocky/WeekDaySelector)
+* [code-mc's Linear-Time-Picker](https://github.com/code-mc/linear-time-picker)
+* [FirebaseUI for Android](https://github.com/firebase/FirebaseUI-Android)
 
 
 
