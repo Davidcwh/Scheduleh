@@ -3,7 +3,7 @@
 # Scheduleh: About the Project
 **An android mobile application that not only helps you plan your time, but also brings you and your friends together.**
 
-For NUS SoC's CP2106 Independent Software Development Project (Orbital) Summer 2019
+For NUS SoC's [CP2106 Independent Software Development Project (Orbital) Summer 2019](https://orbital.comp.nus.edu.sg/)
 
 Group members: 
 * [Chia Wei Hao, David](https://github.com/Davidcwh)
