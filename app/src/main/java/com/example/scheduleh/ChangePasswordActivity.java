@@ -141,7 +141,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if(task.isSuccessful()){
-                                Toast.makeText(ChangePasswordActivity.this, "Password updated", Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(ChangePasswordActivity.this, "Password updated", Toast.LENGTH_SHORT).show();
                                 FirebaseAuth mAuth = FirebaseAuth.getInstance();
                                 FirebaseFirestore db = FirebaseFirestore.getInstance();
                                 Map<String, Object> removeTokenId = new HashMap<>();
