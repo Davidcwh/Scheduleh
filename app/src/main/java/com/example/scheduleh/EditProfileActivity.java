@@ -109,8 +109,7 @@ public class EditProfileActivity extends AppCompatActivity {
                 Toast.makeText(EditProfileActivity.this, "Profile updated", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
                 finish();
-                Intent intent = new Intent(EditProfileActivity.this, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                Intent intent = new Intent(EditProfileActivity.this, LoginActivity.class);
                 startActivity(intent);
             }
         });

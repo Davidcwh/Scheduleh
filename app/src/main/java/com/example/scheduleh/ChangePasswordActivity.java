@@ -18,6 +18,10 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ChangePasswordActivity extends AppCompatActivity {
 
@@ -138,9 +142,15 @@ public class ChangePasswordActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<Void> task) {
                             if(task.isSuccessful()){
                                 Toast.makeText(ChangePasswordActivity.this, "Password updated", Toast.LENGTH_SHORT).show();
+                                FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                Map<String, Object> removeTokenId = new HashMap<>();
+                                removeTokenId.put("tokenId", "");
+                                db.collection("users").document(mAuth.getCurrentUser().getUid()).update(removeTokenId);
+
+                                FirebaseAuth.getInstance().signOut();
                                 finish();
                                 Intent intent = new Intent(ChangePasswordActivity.this, LoginActivity.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 startActivity(intent);
                             }else {
                                 Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
