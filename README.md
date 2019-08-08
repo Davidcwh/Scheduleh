@@ -67,8 +67,8 @@ This project was made possible with these add-ons:
 * [Shrikanth Ravi's Collapsible Calendar View](http://shrikanthravi.me/Collapsible-Calendar-View-Android/)
 * [mahimrocky's WeekDay Selector](https://github.com/mahimrocky/WeekDaySelector)
 * [code-mc's Linear-Time-Picker](https://github.com/code-mc/linear-time-picker)
-* [bumptech's Glide] (https://github.com/bumptech/glide)
-* [hdodenhof's CircleImageView] (https://github.com/hdodenhof/CircleImageView)
+* [bumptech's Glide](https://github.com/bumptech/glide)
+* [hdodenhof's CircleImageView](https://github.com/hdodenhof/CircleImageView)
 * [FirebaseUI for Android](https://github.com/firebase/FirebaseUI-Android)
 
 
