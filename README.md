@@ -19,6 +19,8 @@ Proposed Level of Achievement: **Apollo 11**
 
 [Milestone 3 README](https://docs.google.com/document/d/1XaD-jkOmDCYLBXLr7w-DypuZMqs2a_N4ZnNnVluCt28/edit?usp=sharing)
 
+[Download apk here](app/release/Scheduleh.apk)
+
 
 ![](https://i.ibb.co/ZzxXBKz/readme-Title.png)
 
