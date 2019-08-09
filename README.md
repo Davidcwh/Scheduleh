@@ -38,7 +38,7 @@ To provide a platform that helps users
 * make the processing of finding common free time among a group of people efficient and convenient, and 
 * improve users’ social life by creating more opportunities for friends and family to spend time together.
 
-## Features:
+## Features
 
 ### Calendar
 In-app calendar where users can save and edit their schedule into.
