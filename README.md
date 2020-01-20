@@ -7,7 +7,7 @@ For NUS SoC's [CP2106 Independent Software Development Project (Orbital) Summer 
 
 Group members: 
 * [Chia Wei Hao, David](https://github.com/Davidcwh)
-* [Lim Jun Kuang, Lionel](https://github.com/lionlim97)
+* [Lim Jun Kuang, Lionel](https://github.com/ljklionel)
 
 Proposed Level of Achievement: **Apollo 11**
 
